@@ -31,8 +31,7 @@ interface CoFundingInterface {
         uint nftID,
         uint startFundingTime,
         uint endFundingTime,
-        uint initialPrice,
-        VaultState vaultState
+        uint initialPrice
     ) external;
 
     /**
@@ -41,16 +40,14 @@ interface CoFundingInterface {
      * @param vaultID ID of selected vault.
      * @param expectedSellingPrice Expected selling price set individually.
      */
-    function setSellingPrice(uint vaultID, uint expectedSellingPrice)
+    function setSellingPrice(bytes32 vaultID, uint expectedSellingPrice)
         external;
 
     /**
      * @notice Deposit money into the wallet (currently only accept eth - native token). 
      *         Call by user want to participate in the vault.
-     *
-     * @param vaultID ID of selected vault.
      */
-    function depositToSpendingWallet(bytes32 vaultID)
+    function depositToSpendingWallet()
         external
         payable;
 
@@ -109,7 +106,7 @@ interface CoFundingInterface {
      * @param vaultID ID of selected vault.
      * @param vaultState ID of selected vault.
      */
-    function changeStateVault(uint vaultID, VaultState vaultState)
+    function changeStateVault(bytes32 vaultID, VaultState vaultState)
         external;
 
     /**
@@ -123,16 +120,6 @@ interface CoFundingInterface {
         external
         view 
         returns (VaultInfo memory vaultInfo);
-
-    /**
-     * @notice Retrieve vault ID list.
-     *
-     * @return vaultIDList The array of ID List.
-     */
-    function getVaults()
-        external
-        view 
-        returns (bytes32[] memory vaultIDList);
 
     /**
      * @notice Retrieve specific user contribution of specific vault.

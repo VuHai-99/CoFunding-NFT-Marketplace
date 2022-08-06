@@ -10,7 +10,8 @@ import {VaultState} from "./CoFundingEnums.sol";
  *      ( price of NFT being bought by CoFunding smart contract after end funding
  *      time),a sellingPrice (price listing on NFTMarket place - price is being 
  *      average weight voted value of every users), a vaultState ( indicates 
- *      state of the current vault ).
+ *      state of the current vault ), a total amount ( total amount of money in 
+ *      in the current vault)
  */
 struct VaultInfo {
     address nftCollection;
@@ -20,6 +21,7 @@ struct VaultInfo {
     uint initialPrice;
     uint boughtPrice;
     uint sellingPrice;
+    uint totalAmount;
     VaultState vaultState; 
 }
 

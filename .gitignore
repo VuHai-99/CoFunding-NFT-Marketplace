@@ -1,0 +1,11 @@
+## SMART CONTRACT
+smart_contract/node_modules
+smart_contract/.env
+smart_contract/coverage
+smart_contract/coverage.json
+smart_contract/typechain-types
+smart_contract/yarn-error.log
+smart_contract/artifacts/
+smart_contract/artifacts-ref/
+smart_contract/hh-cache/
+smart_contract/hh-cache-ref/
