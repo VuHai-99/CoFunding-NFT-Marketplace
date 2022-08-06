@@ -1,0 +1,343 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/CoFunding.sol": {
+      "lastModificationDate": 1659793552678,
+      "contentHash": "2c0733e5347194d9cb0b4a21436b3f22",
+      "sourceName": "contracts/CoFunding.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./interfaces/CoFundingInterface.sol",
+        "./lib/CoFundingStructs.sol",
+        "./lib/CoFundingEnums.sol",
+        "./lib/CoFundingInternal.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "CoFunding"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingInterface.sol": {
+      "lastModificationDate": 1659790810230,
+      "contentHash": "3579921d6cf00b31a700b4261bbf7c1e",
+      "sourceName": "contracts/interfaces/CoFundingInterface.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../lib/CoFundingStructs.sol",
+        "../lib/CoFundingEnums.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "CoFundingInterface"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingStructs.sol": {
+      "lastModificationDate": 1659769495671,
+      "contentHash": "67bac68e6a65d92af6a9302a06200660",
+      "sourceName": "contracts/lib/CoFundingStructs.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./CoFundingEnums.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": []
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingEnums.sol": {
+      "lastModificationDate": 1659769495671,
+      "contentHash": "f2e9eec092882fab64f52454e4264734",
+      "sourceName": "contracts/lib/CoFundingEnums.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": []
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingErrorsAndEvents.sol": {
+      "lastModificationDate": 1659791176903,
+      "contentHash": "e37669f2a234a2b10247b46d7e1be8af",
+      "sourceName": "contracts/interfaces/CoFundingErrorsAndEvents.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "CoFundingErrorsAndEvents"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1659769526818,
+      "contentHash": "e436cea06129be2c73cda4b1acc848b5",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1659769526826,
+      "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
+      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1659769526706,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingInternal.sol": {
+      "lastModificationDate": 1659793558686,
+      "contentHash": "4033856b55b1ef90e97a48992c752b91",
+      "sourceName": "contracts/lib/CoFundingInternal.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../lib/CoFundingStructs.sol",
+        "../lib/CoFundingEnums.sol",
+        "../interfaces/CoFundingErrorsAndEvents.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "CoFundingInternal"
+      ]
+    }
+  }
+}

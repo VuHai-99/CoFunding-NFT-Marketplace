@@ -87,8 +87,9 @@ interface CoFundingInterface {
      *         Change state of vault to Ended.
      *         
      * @param vaultID ID of selected vault.
+     * @param boughtPrice Price of NFT when smart contract buy from marketplace.
      */
-    function endFundingPhase(bytes32 vaultID)
+    function endFundingPhase(bytes32 vaultID, uint boughtPrice)
         external;
 
     /**

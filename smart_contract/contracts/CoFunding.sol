@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import {CoFundingInterface} from "./interfaces/CoFundingInterface.sol";
 import {VaultInfo, UserContribution} from "./lib/CoFundingStructs.sol";
 import {VaultState} from "./lib/CoFundingEnums.sol";
-import {CoFundingErrorsAndEvents} from "./interfaces/CoFundingErrorsAndEvents.sol";
+import {CoFundingInternal} from "./lib/CoFundingInternal.sol";
 
 /**
  * @title CoFunding
@@ -12,24 +12,14 @@ import {CoFundingErrorsAndEvents} from "./interfaces/CoFundingErrorsAndEvents.so
  * @custom:version 1.0
  * @notice CoFunding is a protocol for multiple users co-buying an NFT on 
  *         specific NFT-Marketplace ( currently Opensea ).
- */
+ */ 
 
-contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
-    //Track status of each Vault Info
-    mapping(bytes32 => VaultInfo) private _vaultInfos;
-    //Track status of each User infomation in each Vault
-    mapping(bytes32 => mapping(address => UserContribution)) private _userContributions;
-    //Track user spending wallet
-    mapping(address => uint) private _userSpendingWallets;
-    //Marketplace protocol address ( currently only supporting opensea protocol _ seaport)
-    address private _marketplace;
+contract CoFunding is CoFundingInterface, CoFundingInternal {
 
     /**
      * @param marketplace Define marketplace protocol address.
      */
-    constructor(address marketplace) {
-        _marketplace = marketplace;
-    }
+    constructor(address marketplace) CoFundingInternal(marketplace){}
 
     /**
      * @notice Create an vault to co-funding buying an specific NFT. Can be 
@@ -52,23 +42,8 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
         uint endFundingTime,
         uint initialPrice
     ) external {
-        VaultInfo storage vaultInfo = _vaultInfos[vaultID];
-        // If vaultID already existed
-        if(vaultInfo.nftCollection != address(0)){
-            revert VaultIDExisted();
-        }
 
-        //Initiate new vault
-        vaultInfo.nftCollection = nftCollection;
-        vaultInfo.nftID = nftID;
-        vaultInfo.startFundingTime = startFundingTime;
-        vaultInfo.endFundingTime = endFundingTime;
-        vaultInfo.initialPrice = initialPrice;
-        // Default value: vaultInfo.boughtPrice = 0;
-        // Default value: vaultInfo.sellingPrice = 0;
-        // Default value: vaultInfo.totalAmount = 0;
-        // Default value: vaultInfo.vaultState = VaultState.CREATED;
-
+        _createVault(vaultID, nftCollection, nftID, startFundingTime, endFundingTime, initialPrice);
     }
 
     /**
@@ -80,20 +55,10 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
     function setSellingPrice(
         bytes32 vaultID, uint expectedSellingPrice
     ) external {
-        //Check if vaultID existed
-        VaultInfo memory vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
 
-        //Check if vault is still not Ended or Disable
-        if(vaultInfo.vaultState != VaultState.ENDED && vaultInfo.vaultState != VaultState.DISABLE){
-            revert VaultEndedOrDisabled();
-        }
-
-        UserContribution storage usercontribution = _userContributions[vaultID][msg.sender];
-        usercontribution.expectedSellingPrice = expectedSellingPrice;
+        _setSellingPrice(vaultID, expectedSellingPrice);
     }
+
 
     /**
      * @notice Deposit money into the wallet (currently only accept eth - native token). 
@@ -102,12 +67,8 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
     function depositToSpendingWallet()
         external
         payable {
-        //Check if value sent is valid. Valid is >0
-        if (msg.value <= 0){
-            revert InvalidMoneyTransfer();
-        }
 
-        _userSpendingWallets[msg.sender] += msg.value;
+        _depositToSpendingWallet();
     }
 
     /**
@@ -118,18 +79,8 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
     function withdrawFromSpendingWallet(uint amount)
         external
         payable{
-        //Check if value sent is valid. Valid is >0
-        if (amount <= 0){
-            revert InvalidMoneyTransfer();
-        }
-        //Check if withdraw value is more than in spending wallet
-        if(amount > _userSpendingWallets[msg.sender]){
-            revert NotEnoughMoneyInSpendingWallet();
-        }
-        //Update storage value
-        _userSpendingWallets[msg.sender] -= amount;
-        //Actual tranfer
-        payable(msg.sender).transfer(amount);
+
+        _withdrawFromSpendingWallet(amount);
     }
 
     /**
@@ -139,33 +90,9 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
      * @param amount deposit amount.
      */
     function depositToVaultFromSpendingWallet(bytes32 vaultID, uint amount)
-        external {
+        external{
 
-        //Check if vaultID existed
-        VaultInfo memory vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
-
-        //Check if vault is in Funding process
-        if(vaultInfo.vaultState != VaultState.CREATED){
-            revert VaultNotInFundingProcess();
-        }
-
-        //Check if value sent is valid. Valid is >0
-        if (amount <= 0){
-            revert InvalidMoneyTransfer();
-        }
-
-        //Check if enough money in spending wallet
-        if (amount > _userSpendingWallets[msg.sender]){
-            revert NotEnoughMoneyInSpendingWallet();
-        }
-
-        //Update storage value
-        _userSpendingWallets[msg.sender] -= amount;
-        _userContributions[vaultID][msg.sender].contributionAmount += amount;
-        _vaultInfos[vaultID].totalAmount += amount;
+        _depositToVaultFromSpendingWallet(vaultID,amount);
     }
 
     /**
@@ -175,32 +102,38 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
      * @param amount deposit amount.
      */
     function withdrawFromVaultFromSpendingWallet(bytes32 vaultID, uint amount)
+        external{
+
+        _withdrawFromVaultFromSpendingWallet(vaultID,amount);
+    }
+
+    /**
+     * @notice End of funding phase:
+     *      +) If raise enough money, smart contract will buy
+     *         NFT from market place, NFT being own by an external address.
+     *         Change state of vault to Funded. Refund surplus money to user.
+     *      +) Else refund (locked) money from vault to user spending wallet.
+     *         Change state of vault to Ended.
+     *         
+     * @param vaultID ID of selected vault.
+     * @param boughtPrice Price of NFT when smart contract buy from marketplace.
+     */
+    function endFundingPhase(bytes32 vaultID, uint boughtPrice)
         external {
-        //Check if vaultID existed
-        VaultInfo memory vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
 
-        //Check if vault is in Funding process
-        if(vaultInfo.vaultState != VaultState.CREATED){
-            revert VaultNotInFundingProcess();
-        }
+        _endFundingPhase(vaultID,boughtPrice);
+    }
 
-        //Check if enough money in user's vault
-        if (amount > _userContributions[vaultID][msg.sender].contributionAmount){
-            revert NotEnoughMoneyInUserVault();
-        }
+    /**
+     * @notice Finish vault is being call by admin when selling NFT being bought by someone on the market.
+     *         Reward being divided to user due to % of contribution to the pool. Change state of vault to Ended.
+     *
+     * @param vaultID ID of selected vault.
+     */
+    function finishVault(bytes32 vaultID)
+        external{
 
-        //Check if enough money in total vault
-        if (amount > _vaultInfos[vaultID].totalAmount){
-            revert NotEnoughMoneyInTotalVault(); 
-        }
-
-        //Update storage value
-        _userSpendingWallets[msg.sender] += amount;
-        _userContributions[vaultID][msg.sender].contributionAmount -= amount;
-        _vaultInfos[vaultID].totalAmount -= amount;
+        _finishVault(vaultID);
     }
 
     /**
@@ -210,14 +143,9 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
      * @param vaultState ID of selected vault.
      */
     function changeStateVault(bytes32 vaultID, VaultState vaultState)
-        external {
-        //Check if vaultID existed
-        VaultInfo storage vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
-        //Update storage value
-        vaultInfo.vaultState = vaultState;
+        external onlyOwner() {
+
+        _changeStateVault(vaultID,vaultState);
     }
 
     /**
@@ -231,11 +159,8 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
         external
         view 
         returns (VaultInfo memory vaultInfo) {
-        //Check if vaultID existed
-        vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
+
+        vaultInfo = _getVault(vaultID);
     }
 
     /**
@@ -249,13 +174,9 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
     function getContributionInVault(bytes32 vaultID, address user)
         external
         view
-        returns (uint contributionAmount){
-        //Check if vaultID existed
-        VaultInfo memory vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
-        contributionAmount = _userContributions[vaultID][user].contributionAmount;
+        returns (uint contributionAmount) {
+
+        contributionAmount = _getContributionInVault(vaultID,user);
     }
     
     /**
@@ -269,13 +190,8 @@ contract CoFunding is CoFundingInterface, CoFundingErrorsAndEvents {
         external
         view
         returns (uint totalContributionAmount){
-        //Check if vaultID existed
-        VaultInfo memory vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
 
-        totalContributionAmount = vaultInfo.totalAmount;
+        totalContributionAmount = _getVaultTotalContribution(vaultID);
     }
 }
  

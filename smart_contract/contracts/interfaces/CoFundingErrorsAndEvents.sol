@@ -10,4 +10,5 @@ interface CoFundingErrorsAndEvents {
     error VaultNotInFundingProcess();
     error NotEnoughMoneyInUserVault();
     error NotEnoughMoneyInTotalVault();
+    error VaultCannotBeFinish();
 }
