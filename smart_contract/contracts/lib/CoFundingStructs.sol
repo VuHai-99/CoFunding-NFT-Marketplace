@@ -34,4 +34,5 @@ struct VaultInfo {
 struct UserContribution {
     uint contributionAmount;
     uint expectedSellingPrice;
+    // uint rewardClaimAmount;
 }

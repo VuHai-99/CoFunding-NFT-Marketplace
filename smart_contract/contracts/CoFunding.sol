@@ -96,6 +96,21 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
     }
 
     /**
+     * @notice Combination of deposit money from spending wallet to vault and set expected selling price 
+     *         at the same time.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amount deposit amount.
+     * @param expectedSellingPrice deposit amount.
+     */
+    function depositToVaultAndSetSellingPrice(bytes32 vaultID, uint amount, uint expectedSellingPrice)
+        external{
+
+        _depositToVaultFromSpendingWallet(vaultID,amount);
+        _setSellingPrice(vaultID, expectedSellingPrice);
+    }
+
+    /**
      * @notice Money being unlocked amount (withdraw) from vault. Unlocked money so user can withdraw to user address.
      *
      * @param vaultID ID of selected vault.

@@ -4,15 +4,18 @@ pragma solidity ^0.8.13;
 import {VaultInfo, UserContribution} from "../lib/CoFundingStructs.sol";
 import {VaultState} from "../lib/CoFundingEnums.sol";
 import {CoFundingErrorsAndEvents} from "../interfaces/CoFundingErrorsAndEvents.sol";
+import {ArrayHelper} from "../helpers/ArrayHelpers.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 
-contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
+contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelper  {
     //Track status of each Vault Info
     mapping(bytes32 => VaultInfo) private _vaultInfos;
     //Track status of each User infomation in each Vault
     mapping(bytes32 => mapping(address => UserContribution)) private _userContributions;
+    //Track list of user in each vault
+    mapping(bytes32 => address[]) _vaultUsers;
     //Track user spending wallet
     mapping(address => uint) private _userSpendingWallets;
     //Marketplace protocol address ( currently only supporting opensea protocol _ seaport)
@@ -135,6 +138,21 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
         _userSpendingWallets[msg.sender] -= amount;
         _userContributions[vaultID][msg.sender].contributionAmount += amount;
         _vaultInfos[vaultID].totalAmount += amount;
+        _addUserToVault(vaultID);
+    }
+
+    /**
+     * @dev Internal function. When user deposit into vault, add 
+     *      user into list of user in that vault.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amount deposit amount.
+     */
+    function _addUserToVault(bytes32 vaultID)
+        internal {
+        if(_userContributions[vaultID][msg.sender].contributionAmount > 0){
+            _addAddressToUniqueAddressArray(msg.sender,_vaultUsers[vaultID]);
+        }
     }
 
     /**
@@ -151,6 +169,11 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
             revert NotEnoughMoneyInUserVault();
         }
 
+        //Check if user already deposit into vault
+        if (_userContributions[vaultID][msg.sender].contributionAmount == 0){
+            revert UserHaveNotParticipatedInVault();
+        }
+
         //Check if enough money in total vault
         if (amount > _vaultInfos[vaultID].totalAmount){
             revert NotEnoughMoneyInTotalVault(); 
@@ -160,6 +183,21 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
         _userSpendingWallets[msg.sender] += amount;
         _userContributions[vaultID][msg.sender].contributionAmount -= amount;
         _vaultInfos[vaultID].totalAmount -= amount;
+        _removeUserFromVault(vaultID);
+    }
+
+    /**
+     * @dev Internal function. Remove user from list of user in specific vault
+     *      if they withdraw all the money from vault.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amount deposit amount.
+     */
+    function _removeUserFromVault(bytes32 vaultID)
+        internal {
+        if(_userContributions[vaultID][msg.sender].contributionAmount == 0){
+            _removeAddressFromUniqueAddressArray(msg.sender,_vaultUsers[vaultID]);
+        }
     }
 
     /**
@@ -188,10 +226,24 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
 
         if(boughtPrice <= vaultInfo.initialPrice){
             vaultInfo.vaultState = VaultState.FUNDED;
-            // Call inner function to buy nft then refund surplus money
+            // Call inner function to buy nft
         } else {
-            // Call inner function to refund surplus money
             vaultInfo.vaultState = VaultState.ENDED;
+            _refundEndVault(vaultID);
+        }
+    }
+
+    /**
+     * @dev Internal function to refund money to user's spending
+     *      wallet when vault is cancelled.
+     *
+     * @param vaultID ID of selected vault.
+     */
+    function _refundEndVault(bytes32 vaultID){
+        address[] vaultUser = _vaultUsers[vaultID];
+        //Refund to user's spending wallet all money deposited into vault
+        for(uint i = 0; i< vaultUser.length; i++){
+            _userSpendingWallets[vaultUser[i]] += _userContributions[vaultID][vaultUser[i]].contributionAmount;
         }
     }
 
@@ -213,11 +265,38 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
         }
 
         if(vaultInfo.vaultState == VaultState.FUNDED){
-            //Call inner function to divide reward
+            _divideRewardInFinishedVault(vaultID);
         } else {
             revert VaultCannotBeFinish();
         }
 
+    }
+
+    /**
+     * @dev Internal function to divide reward money getting back from 
+     *      successfully sold the NFT ( according to % contribution ).
+     *      Formula: Reward_Money = Surplus_Money + Sold_NFT_Money
+     *          +) Surplus_Money:
+                    - Money being substracted when totalMoney > boughtPrice.
+                    - Surplus_Money = contributionAmount - ((contributionAmount / totalMoney ) * boughtPrice)
+     *          +) Sold_NFT_Money:
+                    - Money getting back from sold NFT. Divide according 
+                      to % of contribution
+                    - Sold_NFT_Money = (contributionAmount / totalMoney ) * sellingPrice
+     * @param vaultID ID of selected vault.
+     */
+    function _divideRewardInFinishedVault(bytes32 vaultID){
+        address[] vaultUser = _vaultUsers[vaultID];
+        //Refund to user's spending wallet all money deposited into vault
+        for(uint i = 0; i< vaultUser.length; i++){
+            uint contributionAmount = _userContributions[vaultID][vaultUser[i]].contributionAmount;
+            uint totalMoney = _vaultInfos[vaultID].totalAmount;
+            uint boughtPrice = _vaultInfos[vaultID].boughtPrice;
+            uint sellingPrice = _vaultInfos[vaultID].sellingPrice;
+            uint surplusMoney = contributionAmount - ((contributionAmount / totalMoney ) * boughtPrice);
+            uint soldNFTMoney = (contributionAmount / totalMoney ) * sellingPrice;
+            _userSpendingWallets[vaultUser[i]] += (surplusMoney + soldNFTMoney);
+        }
     }
 
     /**
@@ -288,6 +367,8 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents {
 
         totalContributionAmount = vaultInfo.totalAmount;
     }
+
+    // function _refundMoneyFromVault{}
 
     modifier IsVaultIDExist(bytes32 vaultID) {
         VaultInfo memory vaultInfo = _vaultInfos[vaultID];

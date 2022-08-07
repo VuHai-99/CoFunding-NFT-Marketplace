@@ -11,4 +11,5 @@ interface CoFundingErrorsAndEvents {
     error NotEnoughMoneyInUserVault();
     error NotEnoughMoneyInTotalVault();
     error VaultCannotBeFinish();
+    error UserHaveNotParticipatedInVault();
 }
