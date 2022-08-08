@@ -41,7 +41,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
         uint startFundingTime,
         uint endFundingTime,
         uint initialPrice
-    ) external {
+    ) external override{
 
         _createVault(vaultID, nftCollection, nftID, startFundingTime, endFundingTime, initialPrice);
     }
@@ -54,7 +54,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      */
     function setSellingPrice(
         bytes32 vaultID, uint expectedSellingPrice
-    ) external {
+    ) external override{
 
         _setSellingPrice(vaultID, expectedSellingPrice);
     }
@@ -64,11 +64,12 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @notice Deposit money into the wallet (currently only accept eth - native token). 
      *         Call by user want to participate in the vault.
      */
-    function depositToSpendingWallet()
+    function depositDirectlyToSpendingWallet()
         external
-        payable {
+        payable 
+        override{
 
-        _depositToSpendingWallet();
+        _depositDirectlyToSpendingWallet();
     }
 
     /**
@@ -76,11 +77,12 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      *
      * @param amount withdrawal amount.
      */
-    function withdrawFromSpendingWallet(uint amount)
+    function withdrawDirectlyFromSpendingWallet(uint amount)
         external
-        payable{
+        payable
+        override{
 
-        _withdrawFromSpendingWallet(amount);
+        _withdrawDirectlyFromSpendingWallet(amount);
     }
 
     /**
@@ -90,7 +92,8 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param amount deposit amount.
      */
     function depositToVaultFromSpendingWallet(bytes32 vaultID, uint amount)
-        external{
+        external
+        override{
 
         _depositToVaultFromSpendingWallet(vaultID,amount);
     }
@@ -104,10 +107,55 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param expectedSellingPrice deposit amount.
      */
     function depositToVaultAndSetSellingPrice(bytes32 vaultID, uint amount, uint expectedSellingPrice)
-        external{
+        external
+        override{
 
         _depositToVaultFromSpendingWallet(vaultID,amount);
         _setSellingPrice(vaultID, expectedSellingPrice);
+    }
+
+    /**
+     * @notice Money being deposited and locked (deposit) into vault directly.
+     *
+     * @param vaultID ID of selected vault.
+     */
+    function depositDirectlyToVault(bytes32 vaultID)
+        external
+        payable
+        override{
+            
+        _depositDirectlyToVault(vaultID);
+    }
+
+    /**
+     * @notice Money being deposited and locked (deposit) into vault 
+     *         both directly and from spending wallet.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amountFromSpendingWallet withdraw amount.
+     */
+    function depositDirectlyAndFromSpendingWalletToVault(bytes32 vaultID, uint amountFromSpendingWallet)
+        external
+        payable
+        override{
+        
+        _depositDirectlyToVault(vaultID);
+        _depositToVaultFromSpendingWallet(vaultID,amountFromSpendingWallet);
+    }
+
+    /**
+     * @notice Money being withdraw both directly and from spending wallet.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amountFromSpendingWallet withdraw amount.
+     */
+    function withdrawDirectlyAndFromSpendingWalletToVault(bytes32 vaultID, uint amountFromSpendingWallet)
+        external
+        payable
+        override{
+
+        _withdrawFromVaultToSpendingWallet(vaultID, amountFromSpendingWallet);
+        _withdrawDirectlyFromSpendingWallet(amountFromSpendingWallet);
     }
 
     /**
@@ -116,11 +164,26 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param vaultID ID of selected vault.
      * @param amount deposit amount.
      */
-    function withdrawFromVaultFromSpendingWallet(bytes32 vaultID, uint amount)
-        external{
+    function withdrawFromVaultToSpendingWallet(bytes32 vaultID, uint amount)
+        external
+        override{
 
-        _withdrawFromVaultFromSpendingWallet(vaultID,amount);
+        _withdrawFromVaultToSpendingWallet(vaultID,amount);
     }
+
+    /**
+     * @notice Money being withdraw from vault to user address directly.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amount withdraw amount.
+     */
+    function withdrawDirectlyFromVault(bytes32 vaultID, uint amount)
+        external
+        payable
+        override{
+        _withdrawDirectlyFromVault(vaultID, amount);
+    }
+
 
     /**
      * @notice End of funding phase:
@@ -134,7 +197,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param boughtPrice Price of NFT when smart contract buy from marketplace.
      */
     function endFundingPhase(bytes32 vaultID, uint boughtPrice)
-        external {
+        external override{
 
         _endFundingPhase(vaultID,boughtPrice);
     }
@@ -146,7 +209,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param vaultID ID of selected vault.
      */
     function finishVault(bytes32 vaultID)
-        external{
+        external override{
 
         _finishVault(vaultID);
     }
@@ -158,7 +221,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param vaultState ID of selected vault.
      */
     function changeStateVault(bytes32 vaultID, VaultState vaultState)
-        external onlyOwner() {
+        external override onlyOwner() {
 
         _changeStateVault(vaultID,vaultState);
     }
@@ -173,6 +236,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
     function getVault(bytes32 vaultID)
         external
         view 
+        override
         returns (VaultInfo memory vaultInfo) {
 
         vaultInfo = _getVault(vaultID);
@@ -184,14 +248,15 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param vaultID ID of selected vault.
      * @param user User address.
      *
-     * @return contributionAmount The contribution amount
+     * @return userContributions The contribution info
      */
     function getContributionInVault(bytes32 vaultID, address user)
         external
         view
-        returns (uint contributionAmount) {
+        override
+        returns (UserContribution memory userContributions) {
 
-        contributionAmount = _getContributionInVault(vaultID,user);
+        userContributions = _getContributionInVault(vaultID,user);
     }
     
     /**
@@ -204,9 +269,41 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
     function getVaultTotalContribution(bytes32 vaultID)
         external
         view
+        override
         returns (uint totalContributionAmount){
 
         totalContributionAmount = _getVaultTotalContribution(vaultID);
+    }
+
+    /**
+     * @notice Retrieve specific user contribution of specific vault.
+     *
+     * @param user User address
+     *
+     * @return spendingWalletAmount The contribution amount
+     */
+    function getUserSpendingWallet(address user)
+        external
+        view
+        override
+        returns (uint spendingWalletAmount){
+        
+        spendingWalletAmount = _getUserSpendingWallet(user);
+    }
+
+    /**
+     * @notice Retrieve list of pariticipant in vault.
+     *
+     * @param vaultID ID of selected vault.
+     *
+     * @return userListInVault The contribution amount
+     */
+    function getListOfUserInVault(bytes32 vaultID)
+        external
+        view
+        returns (address[] memory userListInVault){
+
+        userListInVault = _getListOfUserInVault(vaultID);
     }
 }
  

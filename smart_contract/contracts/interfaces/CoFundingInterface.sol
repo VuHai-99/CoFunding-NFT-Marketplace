@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {VaultInfo} from "../lib/CoFundingStructs.sol";
+import {VaultInfo, UserContribution} from "../lib/CoFundingStructs.sol";
 import {VaultState} from "../lib/CoFundingEnums.sol";
 
 /**
@@ -47,7 +47,7 @@ interface CoFundingInterface {
      * @notice Deposit money into the wallet (currently only accept eth - native token). 
      *         Call by user want to participate in the vault.
      */
-    function depositToSpendingWallet()
+    function depositDirectlyToSpendingWallet()
         external
         payable;
 
@@ -56,7 +56,7 @@ interface CoFundingInterface {
      *
      * @param amount withdrawal amount.
      */
-    function withdrawFromSpendingWallet(uint amount)
+    function withdrawDirectlyFromSpendingWallet(uint amount)
         external
         payable;
 
@@ -81,13 +81,53 @@ interface CoFundingInterface {
         external;
 
     /**
+     * @notice Money being deposited and locked (deposit) into vault directly.
+     *
+     * @param vaultID ID of selected vault.
+     */
+    function depositDirectlyToVault(bytes32 vaultID)
+        external
+        payable;
+
+    /**
      * @notice Money being unlocked amount (withdraw) from vault. Unlocked money so user can withdraw to user address.
      *
      * @param vaultID ID of selected vault.
      * @param amount deposit amount.
      */
-    function withdrawFromVaultFromSpendingWallet(bytes32 vaultID, uint amount)
+    function withdrawFromVaultToSpendingWallet(bytes32 vaultID, uint amount)
         external;
+
+    /**
+     * @notice Money being withdraw from vault to user address directly.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amount withdraw amount.
+     */
+    function withdrawDirectlyFromVault(bytes32 vaultID, uint amount)
+        external
+        payable;
+
+    /**
+     * @notice Money being deposited and locked (deposit) into vault 
+     *         both directly and from spending wallet.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amountFromSpendingWallet withdraw amount.
+     */
+    function depositDirectlyAndFromSpendingWalletToVault(bytes32 vaultID, uint amountFromSpendingWallet)
+        external
+        payable;
+
+    /**
+     * @notice Money being withdraw both directly and from spending wallet.
+     *
+     * @param vaultID ID of selected vault.
+     * @param amountFromSpendingWallet withdraw amount.
+     */
+    function withdrawDirectlyAndFromSpendingWalletToVault(bytes32 vaultID, uint amountFromSpendingWallet)
+        external
+        payable;
 
     /**
      * @notice End of funding phase:
@@ -139,12 +179,12 @@ interface CoFundingInterface {
      * @param vaultID ID of selected vault.
      * @param user User address.
      *
-     * @return contributionAmount The contribution amount
+     * @return userContributions The contribution info
      */
     function getContributionInVault(bytes32 vaultID, address user)
         external
         view
-        returns (uint contributionAmount);
+        returns (UserContribution memory userContributions);
         
     /**
      * @notice Retrieve specific user contribution of specific vault.
@@ -158,4 +198,27 @@ interface CoFundingInterface {
         view
         returns (uint totalContributionAmount);
 
+    /**
+     * @notice Retrieve specific user contribution of specific vault.
+     *
+     * @param user User address
+     *
+     * @return spendingWalletAmount The contribution amount
+     */
+    function getUserSpendingWallet(address user)
+        external
+        view
+        returns (uint spendingWalletAmount);
+
+    /**
+     * @notice Retrieve list of pariticipant in vault.
+     *
+     * @param vaultID ID of selected vault.
+     *
+     * @return userListInVault The contribution amount
+     */
+    function getListOfUserInVault(bytes32 vaultID)
+        external
+        view
+        returns (address[] memory userListInVault);
 }

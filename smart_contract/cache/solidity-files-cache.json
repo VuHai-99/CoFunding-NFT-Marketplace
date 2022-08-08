@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/CoFunding.sol": {
-      "lastModificationDate": 1659794121627,
-      "contentHash": "b151032bfcbf6ad2ac01d3574ea8732b",
+      "lastModificationDate": 1659957238439,
+      "contentHash": "62b9daccf7750228d8ec7c43f236931f",
       "sourceName": "contracts/CoFunding.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -43,8 +43,8 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingInterface.sol": {
-      "lastModificationDate": 1659794123083,
-      "contentHash": "6a848d7f8b8bea71dda33282cbb31082",
+      "lastModificationDate": 1659957231450,
+      "contentHash": "14409b5f109afc6857e75fea13fac8b4",
       "sourceName": "contracts/interfaces/CoFundingInterface.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -82,8 +82,8 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingStructs.sol": {
-      "lastModificationDate": 1659769495671,
-      "contentHash": "67bac68e6a65d92af6a9302a06200660",
+      "lastModificationDate": 1659872518045,
+      "contentHash": "fd4afdb6f48cc36ab96bd34b4d0160f8",
       "sourceName": "contracts/lib/CoFundingStructs.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -118,8 +118,8 @@
       "artifacts": []
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingEnums.sol": {
-      "lastModificationDate": 1659769495671,
-      "contentHash": "f2e9eec092882fab64f52454e4264734",
+      "lastModificationDate": 1659959099927,
+      "contentHash": "ca740915a9e621ea70e3b49ca7d79b36",
       "sourceName": "contracts/lib/CoFundingEnums.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -152,8 +152,8 @@
       "artifacts": []
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingErrorsAndEvents.sol": {
-      "lastModificationDate": 1659791176903,
-      "contentHash": "e37669f2a234a2b10247b46d7e1be8af",
+      "lastModificationDate": 1659959161015,
+      "contentHash": "573e072a6680dd1f1ff0b9b6fb009693",
       "sourceName": "contracts/interfaces/CoFundingErrorsAndEvents.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -188,7 +188,7 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1659769526818,
+      "lastModificationDate": 1659958564929,
       "contentHash": "e436cea06129be2c73cda4b1acc848b5",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -226,7 +226,7 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
-      "lastModificationDate": 1659769526826,
+      "lastModificationDate": 1659958564985,
       "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
       "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
       "solcConfig": {
@@ -262,7 +262,7 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1659769526706,
+      "lastModificationDate": 1659958563217,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -298,8 +298,8 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingInternal.sol": {
-      "lastModificationDate": 1659793663993,
-      "contentHash": "4033856b55b1ef90e97a48992c752b91",
+      "lastModificationDate": 1659959125007,
+      "contentHash": "bcf989fda69f6d4dbf110897d4379827",
       "sourceName": "contracts/lib/CoFundingInternal.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -329,6 +329,7 @@
         "../lib/CoFundingStructs.sol",
         "../lib/CoFundingEnums.sol",
         "../interfaces/CoFundingErrorsAndEvents.sol",
+        "../helpers/ArrayHelpers.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/security/ReentrancyGuard.sol"
       ],
@@ -337,6 +338,192 @@
       ],
       "artifacts": [
         "CoFundingInternal"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/ArrayHelpers.sol": {
+      "lastModificationDate": 1659872518045,
+      "contentHash": "cd281b73551dbabbf270cbaaa95bfd21",
+      "sourceName": "contracts/helpers/ArrayHelpers.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "ArrayHelpers"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/test/TestERC1155.sol": {
+      "lastModificationDate": 1659858260491,
+      "contentHash": "ed976112d89bc814efa5e446d95d3835",
+      "sourceName": "contracts/test/TestERC1155.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@rari-capital/solmate/src/tokens/ERC1155.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "TestERC1155"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC1155.sol": {
+      "lastModificationDate": 1659797741047,
+      "contentHash": "0f01131c8e9d81731a3655fb884c3231",
+      "sourceName": "@rari-capital/solmate/src/tokens/ERC1155.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ERC1155",
+        "ERC1155TokenReceiver"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/test/TestERC721.sol": {
+      "lastModificationDate": 1659858260355,
+      "contentHash": "0b00e9e4584ba342b5de61fcc65bf36f",
+      "sourceName": "contracts/test/TestERC721.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@rari-capital/solmate/src/tokens/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "TestERC721"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC721.sol": {
+      "lastModificationDate": 1659797741047,
+      "contentHash": "224006de5bf59fbbf155dcaac8c3a955",
+      "sourceName": "@rari-capital/solmate/src/tokens/ERC721.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ERC721",
+        "ERC721TokenReceiver"
       ]
     }
   }

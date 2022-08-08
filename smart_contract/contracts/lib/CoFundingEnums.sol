@@ -12,5 +12,5 @@ enum VaultState {
     ENDED,
 
     // 3: there is problem, forced stop.
-    DISABLE
+    DISABLED
 }
