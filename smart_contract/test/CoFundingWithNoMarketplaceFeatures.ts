@@ -225,7 +225,7 @@ describe("CoFunding with no marketplace features", async function () {
             ).to.be.reverted;
 
         });
-        it("Deposit_To_Spending_Wallet", async function () {
+        it("Deposit_Directly_To_Spending_Wallet", async function () {
             /* Scenerio
             */
 
@@ -250,7 +250,7 @@ describe("CoFunding with no marketplace features", async function () {
             await expect(coFunding.connect(account1).depositDirectlyToSpendingWallet({ value: 0 })
             ).to.be.reverted;
         });
-        it("Withdraw_From_Spending_Wallet", async function () {
+        it("Withdraw_Directly_From_Spending_Wallet", async function () {
             /* Scenerio
             */
 
@@ -372,95 +372,157 @@ describe("CoFunding with no marketplace features", async function () {
 
             //6. Deposit to vault from spending wallet with error vaultID not in funding process.
             await coFunding.connect(owner).changeStateVault(vaultID,1);
-            await coFunding.connect(account1).depositToVaultFromSpendingWallet(vaultID,userSpendingWalletAfter.div(2));
+            // await coFunding.connect(account1).depositToVaultFromSpendingWallet(vaultID,userSpendingWalletAfter.div(2));
             // await expect(coFunding.connect(account1).depositToVaultFromSpendingWallet(vaultID5,userSpendingWalletAfter.div(2))
             // ).to.be.revertedWith("NotEnoughMoneyInSpendingWallet");
-            // await expect(coFunding.connect(account1).depositToVaultFromSpendingWallet(vaultID5,userSpendingWalletAfter.div(2))
-            // ).to.be.reverted;
+            await expect(coFunding.connect(account1).depositToVaultFromSpendingWallet(vaultID5,userSpendingWalletAfter.div(2))
+            ).to.be.reverted;
 
         });
-        // it("Deposit_To_Vault_And_Set_Selling_Price", async function () {
-        //     /* Scenerio
-        //     1. Create vault.
-        //     2. Deposit money into spending wallet.
-        //     */
+        it("Deposit_To_Vault_And_Set_Selling_Price", async function () {
+            /* Scenerio
+            1. Create vault.
+            2. Deposit money into spending wallet.
+            */
 
-        //     /* Result
-        //     1. Successfully deposit to vault from spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
-        //     2. Withdraw from spending wallet error InvalidMoneyTransfer
-        //     3. Withdraw from spending wallet error NotEnoughMoneyInSpendingWallet
-        //     4. Set selling price with error vaultID not valid
-        //     5. Set selling price with error vaultID not in funding process.
-        //     6. Set selling price with error participant have not deposit money.
-        //     7. Successfully deposit to vault from spending wallet then deposit second time. Check that first time _vaultUsers have new item and second dont.
-        //     8. Set selling price with error vaultID not valid
-        //     9. Set selling price with error vaultID not in funding process.
-        //     */
-        // });
-        // it("Withdraw_From_Vault_To_Spending_Wallet", async function () {
-        //     /* Scenerio
-        //     1. Create vault.
-        //     2. Deposit money into spending wallet.
-        //     2. Deposit money into vault.
-        //     */
+            /* Result
+            1. Successfully deposit to vault and set selling price from spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
+            2. Withdraw from spending wallet error InvalidMoneyTransfer
+            3. Withdraw from spending wallet error NotEnoughMoneyInSpendingWallet
+            4. Set selling price with error vaultID not valid
+            5. Set selling price with error vaultID not in funding process.
+            6. Set selling price with error participant have not deposit money.
+            7. Successfully deposit to vault from spending wallet then deposit second time. Check that first time _vaultUsers have new item and second dont.
+            8. Set selling price with error vaultID not valid
+            9. Set selling price with error vaultID not in funding process.
+            */
 
-        //     /* Result
-        //     1. Successfully withdraw from vault to spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
-        //     2. Withdraw from spending wallet error NotEnoughMoneyInUserVault
-        //     3. Withdraw from spending wallet error UserHaveNotParticipatedInVault
-        //     4. Withdraw from spending wallet error NotEnoughMoneyInTotalVault
-        //     5. Successfully withdraw half money from vault to spending wallet then withdraw other half second time. Check that first time _vaultUsers still have old item and second dont.
-        //     6. Set selling price with error vaultID not valid
-        //     7. Set selling price with error vaultID not in funding process.
-        //     */
-        // });
-        // it("End_Funding_Phase", async function () {
-        //     /* Scenerio
-        //     1. Create vault.
-        //     2. Account 1 Deposit money into spending wallet.
-        //     3. Account 2 Deposit money into spending wallet.
-        //     4. Account 1 Deposit money into vault.
-        //     5. Account 2 Deposit money into vault.
-        //     */
+            let now = Math.floor(new Date().getTime() / 1000.0);
 
-        //     /* Result
-        //     1. Successfully end funding phase when boughtPrice <= vaultInfo.initialPrice. ( Check _vaultInfos[vaultID])
-        //     2. Successfully end funding phase when boughtPrice > vaultInfo.initialPrice. ( Check _vaultInfos[vaultID])
-        //     3. End funding phase with error vaultID not valid
-        //     4. End funding phase with error vaultID not in funding process.
-        //     5. End funding phase with error not owner.
-        //     */
-        // });
-        // it("Finish_Vault", async function () {
-        //     /* Scenerio
-        //     1. Create vault.
-        //     2. Account 1 Deposit money into spending wallet.
-        //     3. Account 2 Deposit money into spending wallet.
-        //     4. Account 1 Deposit money into vault.
-        //     5. Account 2 Deposit money into vault.
-        //     6. Vault endFundingPhase()
-        //     7. Deposit x2 money
-        //     */
+            let vaultID = "0x0000000000000000000000000000000000000000000000000000000000001000";
+            let nftCollection = testERC721.address;
+            let nftID = testERC721_ID_Account1;
+            let startFundingTime = now + 100;
+            let endFundingTime = now + 1000;
+            let initialPrice = 100;
+            let depositDirectlyToSpendingWalletAmount = 10000;
+            let depositToVaultAmount = 5000;
+            let expectedSellingPrice = 30000;
+            await coFunding.connect(account1).createVault(
+                vaultID,nftCollection,nftID,startFundingTime,endFundingTime,initialPrice
+            );
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({ value: depositDirectlyToSpendingWalletAmount });
 
-        //     /* Result
-        //     1. Successfully Finish vault. Check if everybody money x2
-        //     2. Finish vault with error vaultID not valid
-        //     3. Finish vault with error VaultCannotBeFinish
-        //     */
-        // });
-        // it("Change_State_Vault", async function () {
-        //     /* Scenerio
-        //     1. Create vault.
-        //     2. Account 1 Deposit money into spending wallet.
-        //     3. Account 1 Deposit money into vault.
-        //     */
+            //1. Successfully deposit to vault and set selling price from spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
+            await coFunding.connect(account1).depositToVaultFromSpendingWalletAndSetSellingPrice(vaultID, depositToVaultAmount, expectedSellingPrice);
+            let userContribution = await coFunding.connect(account1).getContributionInVault(vaultID,account1.address);
+            expect(userContribution.contributionAmount).to.equal(
+                depositToVaultAmount
+            );
+            expect(userContribution.expectedSellingPrice).to.equal(
+                expectedSellingPrice
+            );
 
-        //     /* Result
-        //     1. Successfully change state vault to Eisable. Check call every external function xem co duoc khong
-        //     2. Successfully change state vault to End. Check call every external function xem co duoc khong
-        //     3. End funding phase with error vaultID not valid
-        //     4. End funding phase with error not owner.
-        //     */
-        // });
+        });
+        it("Deposit_Directly_To_Vault", async function () {
+            /* Scenerio
+            1. Create vault.
+            */
+
+            /* Result
+            1. Successfully deposit to vault directly. (check _userContributions, _vaultInfos)
+            2. Error IsVaultIDExitedAndInFundingProcess
+            3. Error InvalidMoneyTransfer
+            4. Successfully deposit to vault directly then deposit second time. Check that first time _vaultUsers have new item and second dont.
+            */
+        });
+        it("Deposit_Directly_And_From_Spending_Wallet_To_Vault", async function () {
+            /* Scenerio
+            1. Create vault.
+            2. Deposit to spending wallet
+            */
+
+            /* Result
+            1. Successfully deposit to vault directly and spending wallet. (check _userContributions, _vaultInfos)
+            2. Error IsVaultIDExitedAndInFundingProcess
+            3. Error InvalidMoneyTransfer
+            4. Successfully deposit to vault directly then deposit second time. Check that first time _vaultUsers have new item and second dont.
+            5. Successfully deposit to vault from spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
+            6. Deposit to vault from spending wallet error NotEnoughMoneyInSpendingWallet
+            7. Deposit to vault from spending wallet with error vaultID not valid
+            8. Deposit to vault from spending wallet with error vaultID not in funding process.
+            */
+        });
+        it("Withdraw_Directly_And_From_Spending_Wallet_To_Vault", async function () {
+            
+        });     
+        it("Withdraw_From_Vault_To_Spending_Wallet", async function () {
+            /* Scenerio
+            1. Create vault.
+            2. Deposit money into spending wallet.
+            2. Deposit money into vault.
+            */
+
+            /* Result
+            1. Successfully withdraw from vault to spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
+            2. Withdraw from spending wallet error NotEnoughMoneyInUserVault
+            3. Withdraw from spending wallet error UserHaveNotParticipatedInVault
+            4. Withdraw from spending wallet error NotEnoughMoneyInTotalVault
+            5. Successfully withdraw half money from vault to spending wallet then withdraw other half second time. Check that first time _vaultUsers still have old item and second dont.
+            6. Set selling price with error vaultID not valid
+            7. Set selling price with error vaultID not in funding process.
+            */
+        });
+        it("Withdraw_Directly_From_Vault", async function () {
+            
+        });
+        it("End_Funding_Phase", async function () {
+            /* Scenerio
+            1. Create vault.
+            2. Account 1 Deposit money into spending wallet.
+            3. Account 2 Deposit money into spending wallet.
+            4. Account 1 Deposit money into vault.
+            5. Account 2 Deposit money into vault.
+            */
+
+            /* Result
+            1. Successfully end funding phase when boughtPrice <= vaultInfo.initialPrice. ( Check _vaultInfos[vaultID])
+            2. Successfully end funding phase when boughtPrice > vaultInfo.initialPrice. ( Check _vaultInfos[vaultID])
+            3. End funding phase with error vaultID not valid
+            4. End funding phase with error vaultID not in funding process.
+            5. End funding phase with error not owner.
+            */
+        });
+        it("Finish_Vault", async function () {
+            /* Scenerio
+            1. Create vault.
+            2. Account 1 Deposit money into spending wallet.
+            3. Account 2 Deposit money into spending wallet.
+            4. Account 1 Deposit money into vault.
+            5. Account 2 Deposit money into vault.
+            6. Vault endFundingPhase()
+            7. Deposit x2 money
+            */
+
+            /* Result
+            1. Successfully Finish vault. Check if everybody money x2
+            2. Finish vault with error vaultID not valid
+            3. Finish vault with error VaultCannotBeFinish
+            */
+        });
+        it("Change_State_Vault", async function () {
+            /* Scenerio
+            1. Create vault.
+            2. Account 1 Deposit money into spending wallet.
+            3. Account 1 Deposit money into vault.
+            */
+
+            /* Result
+            1. Successfully change state vault to Eisable. Check call every external function xem co duoc khong
+            2. Successfully change state vault to End. Check call every external function xem co duoc khong
+            3. End funding phase with error vaultID not valid
+            4. End funding phase with error not owner.
+            */
+        });
     });
 });

@@ -3,6 +3,8 @@ pragma solidity ^0.8.13;
 
 import {VaultInfo, UserContribution} from "../lib/CoFundingStructs.sol";
 import {VaultState} from "../lib/CoFundingEnums.sol";
+import { Order, BasicOrderParameters } from "../seaport/contracts/lib/ConsiderationStructs.sol";
+
 
 /**
  * @title CoFundingInterface
@@ -77,8 +79,31 @@ interface CoFundingInterface {
      * @param amount deposit amount.
      * @param expectedSellingPrice deposit amount.
      */
-    function depositToVaultAndSetSellingPrice(bytes32 vaultID, uint amount, uint expectedSellingPrice)
+    function depositToVaultFromSpendingWalletAndSetSellingPrice(bytes32 vaultID, uint amount, uint expectedSellingPrice)
         external;
+
+    /**
+     * @notice Combination of deposit money directly and from spending wallet to vault and set expected selling price 
+     *         at the same time.
+     *
+     * @param vaultID ID of selected vault.
+     * @param expectedSellingPrice deposit direct amount direct.
+     * @param amountFromSpendingWallet deposit amount from spending wallet.
+     */
+    function depositDirectlyAndFromSpendingWalletToVaultAndSetSellingPrice(bytes32 vaultID, uint amountFromSpendingWallet, uint expectedSellingPrice)
+        external
+        payable;
+
+    /**
+     * @notice Combination of deposit money directly to vault and set expected selling price 
+     *         at the same time.
+     *
+     * @param vaultID ID of selected vault.
+     * @param expectedSellingPrice deposit amount.
+     */
+    function depositDirectlyToVaultAndSetSellingPrice(bytes32 vaultID, uint expectedSellingPrice)
+        external
+        payable;
 
     /**
      * @notice Money being deposited and locked (deposit) into vault directly.
@@ -140,8 +165,12 @@ interface CoFundingInterface {
      * @param vaultID ID of selected vault.
      * @param boughtPrice Price of NFT when smart contract buy from marketplace.
      */
-    function endFundingPhase(bytes32 vaultID, uint boughtPrice)
-        external;
+    function endFundingPhase(
+        bytes32 vaultID, 
+        uint boughtPrice,
+        Order[] calldata orders,
+        BasicOrderParameters calldata parameters
+    ) external;
 
     /**
      * @notice Finish vault is being call by admin when selling NFT being bought by someone on the market.

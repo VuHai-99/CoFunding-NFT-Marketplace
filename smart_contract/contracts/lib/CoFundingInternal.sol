@@ -5,6 +5,9 @@ import {VaultInfo, UserContribution} from "../lib/CoFundingStructs.sol";
 import {VaultState} from "../lib/CoFundingEnums.sol";
 import {CoFundingErrorsAndEvents} from "../interfaces/CoFundingErrorsAndEvents.sol";
 import {ArrayHelpers} from "../helpers/ArrayHelpers.sol";
+import { SeaportInterface } from "../seaport/contracts/interfaces/SeaportInterface.sol";
+import { Order, BasicOrderParameters } from "../seaport/contracts/lib/ConsiderationStructs.sol";
+
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
@@ -279,8 +282,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
      * @param boughtPrice Price of NFT when smart contract buy from marketplace.
      */
     function _endFundingPhase(bytes32 vaultID, uint boughtPrice)
-        internal 
-        onlyOwner() {
+        internal {
         //Check if vaultID existed
         VaultInfo storage vaultInfo = _vaultInfos[vaultID];
         if(vaultInfo.nftCollection == address(0)){
@@ -295,15 +297,49 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
             revert VaultNotInFundingProcess();
         }
 
+        //Ver 1.0 only processes to Funded Phase if bought price <= initialPrice
         if(boughtPrice <= vaultInfo.initialPrice){
             vaultInfo.vaultState = VaultState.FUNDED;
             // Call inner function to buy nft
-        } else {
+        } else 
+        {
             vaultInfo.vaultState = VaultState.ENDED;
             _refundEndVault(vaultID);
         }
     }
+    
+    /**
+     * @dev Internal function. Call validate function from seaport protocol.
+     *      This action is listing an order on-chain. Order must be signed by
+     *      owner of this smart contract. ( owner represents the key pair for
+     *      the smart contract to signed transaction, received NFT and transfer/approve
+     *      NFT)
+     *
+     * @param orders List of Orders being validated by seaport.
+     *
+     * @return result Boolean result return.
+     */
+    function _seaportValidate(Order[] calldata orders)
+        internal
+        returns (bool result){
 
+        result = SeaportInterface(_marketplace).validate(orders);
+    }
+
+    /**
+     * @dev Internal function. Call FulfillBasicOrder function from seaport protocol.
+     *      This action is buying an NFT. All data must be signed by owner.
+     * @param parameters List of param by seaport.
+     *
+     * @return result Boolean result return.
+     */
+    function _seaportFulfillBasicOrder(BasicOrderParameters calldata parameters)
+        internal
+        returns (bool result){
+
+        result = SeaportInterface(_marketplace).fulfillBasicOrder{value: msg.value}(parameters);
+    }
+    
     /**
      * @dev Internal function to refund money to user's spending
      *      wallet when vault is cancelled.
@@ -379,7 +415,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
      * @param vaultState ID of selected vault.
      */
     function _changeStateVault(bytes32 vaultID, VaultState vaultState)
-        internal onlyOwner() {
+        internal  {
         //Check if vaultID existed
         VaultInfo storage vaultInfo = _vaultInfos[vaultID];
         if(vaultInfo.nftCollection == address(0)){
@@ -470,6 +506,8 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
 
         userListInVault = _vaultUsers[vaultID];
     }
+
+    
 
     /**
      * @dev Internal function to check if vault id exists.

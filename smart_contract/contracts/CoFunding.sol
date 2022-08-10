@@ -5,6 +5,7 @@ import {CoFundingInterface} from "./interfaces/CoFundingInterface.sol";
 import {VaultInfo, UserContribution} from "./lib/CoFundingStructs.sol";
 import {VaultState} from "./lib/CoFundingEnums.sol";
 import {CoFundingInternal} from "./lib/CoFundingInternal.sol";
+import { Order, BasicOrderParameters } from "./seaport/contracts/lib/ConsiderationStructs.sol";
 
 /**
  * @title CoFunding
@@ -106,11 +107,45 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param amount deposit amount.
      * @param expectedSellingPrice deposit amount.
      */
-    function depositToVaultAndSetSellingPrice(bytes32 vaultID, uint amount, uint expectedSellingPrice)
+    function depositToVaultFromSpendingWalletAndSetSellingPrice(bytes32 vaultID, uint amount, uint expectedSellingPrice)
         external
         override{
 
         _depositToVaultFromSpendingWallet(vaultID,amount);
+        _setSellingPrice(vaultID, expectedSellingPrice);
+    }
+
+    /**
+     * @notice Combination of deposit money directly to vault and set expected selling price 
+     *         at the same time.
+     *
+     * @param vaultID ID of selected vault.
+     * @param expectedSellingPrice deposit amount.
+     */
+    function depositDirectlyToVaultAndSetSellingPrice(bytes32 vaultID, uint expectedSellingPrice)
+        external
+        payable
+        override{
+
+        _depositDirectlyToVault(vaultID);
+        _setSellingPrice(vaultID, expectedSellingPrice);
+    }
+
+    /**
+     * @notice Combination of deposit money directly and from spending wallet to vault and set expected selling price 
+     *         at the same time.
+     *
+     * @param vaultID ID of selected vault.
+     * @param expectedSellingPrice deposit direct amount direct.
+     * @param amountFromSpendingWallet deposit amount from spending wallet.
+     */
+    function depositDirectlyAndFromSpendingWalletToVaultAndSetSellingPrice(bytes32 vaultID, uint amountFromSpendingWallet, uint expectedSellingPrice)
+        external
+        payable
+        override {
+
+        _depositDirectlyToVault(vaultID);
+        _depositToVaultFromSpendingWallet(vaultID,amountFromSpendingWallet);
         _setSellingPrice(vaultID, expectedSellingPrice);
     }
 
@@ -193,13 +228,24 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      *      +) Else refund (locked) money from vault to user spending wallet.
      *         Change state of vault to Ended.
      *         
+     *         1.0 ver only support basic order from seaport.
      * @param vaultID ID of selected vault.
      * @param boughtPrice Price of NFT when smart contract buy from marketplace.
      */
-    function endFundingPhase(bytes32 vaultID, uint boughtPrice)
-        external override{
+    function endFundingPhase(
+        bytes32 vaultID, 
+        uint boughtPrice,
+        Order[] calldata orders,
+        BasicOrderParameters calldata parameters
+    )
+        external 
+        override
+        onlyOwner()
+        {
 
         _endFundingPhase(vaultID,boughtPrice);
+        _seaportFulfillBasicOrder(parameters);
+        _seaportValidate(orders);
     }
 
     /**
@@ -209,7 +255,10 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param vaultID ID of selected vault.
      */
     function finishVault(bytes32 vaultID)
-        external override{
+        external
+        override
+        onlyOwner() 
+        {
 
         _finishVault(vaultID);
     }
@@ -221,7 +270,10 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
      * @param vaultState ID of selected vault.
      */
     function changeStateVault(bytes32 vaultID, VaultState vaultState)
-        external override onlyOwner() {
+        external
+        override 
+        onlyOwner()
+        {
 
         _changeStateVault(vaultID,vaultState);
     }
