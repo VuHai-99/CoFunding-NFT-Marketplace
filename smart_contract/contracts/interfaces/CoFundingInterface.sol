@@ -26,6 +26,8 @@ interface CoFundingInterface {
      * @param startFundingTime Start funding time.
      * @param endFundingTime End funding time.
      * @param initialPrice Price of the NFT in the marketplace when created the vault.
+     * @param defaultExpectedPrice Default expected price to sell NFT applies for user who have not 
+     * submit voted expected price.
      */
     function createVault(
         bytes32 vaultID,
@@ -33,7 +35,8 @@ interface CoFundingInterface {
         uint nftID,
         uint startFundingTime,
         uint endFundingTime,
-        uint initialPrice
+        uint initialPrice,
+        uint defaultExpectedPrice
     ) external;
 
     /**
@@ -250,4 +253,16 @@ interface CoFundingInterface {
         external
         view
         returns (address[] memory userListInVault);
+
+    /**
+     * @notice Retrieve calculated expected selling price.
+     *        
+     * @param vaultID ID of selected vault.
+     *
+     * @return expectedSellingPrice Return the calculated expected selling price. 
+     */
+    function getVaultExpectedSellingPrice(bytes32 vaultID)
+        external
+        view
+        returns (uint expectedSellingPrice);
 }

@@ -21,6 +21,7 @@ struct VaultInfo {
     uint initialPrice;
     uint boughtPrice;
     uint sellingPrice;
+    uint defaultExpectedPrice;
     uint totalAmount;
     VaultState vaultState; 
 }

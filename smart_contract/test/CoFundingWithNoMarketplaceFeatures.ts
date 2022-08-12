@@ -4,6 +4,8 @@ import { expect } from "chai";
 import { CoFunding, TestERC721 } from "../typechain-types";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
+import { UserContributionStruct, UserContributionStructOutput } from "../typechain-types/contracts/CoFunding";
+
 const { parseEther } = ethers.utils;
 
 describe("CoFunding with no marketplace features", async function () {
@@ -23,7 +25,7 @@ describe("CoFunding with no marketplace features", async function () {
 
     async function currentTestcaseTime(msg: string){
         let now = Math.floor(new Date().getTime() / 1000.0);
-        console.log(msg," at: ", now);
+        // console.log(msg," at: ", now);
       }
     async function timeout(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -422,6 +424,18 @@ describe("CoFunding with no marketplace features", async function () {
             expect(userContribution.expectedSellingPrice).to.equal(
                 expectedSellingPrice
             );
+
+
+            // let userContribution: UserContributionStructOutput = await coFunding.connect(account1).getContributionInVault(vaultID,account1.address);
+            // let expectedUserContribution: UserContributionStructOutput = {
+            //     contributionAmount: depositDirectlyToSpendingWalletAmount-depositToVaultAmount,
+            //     expectedSellingPrice: expectedSellingPrice
+            // }
+            // console.log(userContribution);
+         
+            // expect(userContribution).to.deep.equal(
+            //     expectedUserContribution
+            // );
 
         });
         it("Deposit_Directly_To_Vault", async function () {

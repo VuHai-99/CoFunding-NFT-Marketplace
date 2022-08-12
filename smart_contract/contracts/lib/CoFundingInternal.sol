@@ -41,6 +41,8 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
      * @param startFundingTime Start funding time.
      * @param endFundingTime End funding time.
      * @param initialPrice Price of the NFT in the marketplace when created the vault.
+     * @param defaultExpectedPrice Default expected price to sell NFT applies for user who have not 
+     * submit voted expected price.
      */
     function _createVault(
         bytes32 vaultID,
@@ -48,7 +50,8 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         uint nftID,
         uint startFundingTime,
         uint endFundingTime,
-        uint initialPrice
+        uint initialPrice,
+        uint defaultExpectedPrice
     ) internal {
         VaultInfo storage vaultInfo = _vaultInfos[vaultID];
         // If vaultID already existed
@@ -66,6 +69,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         vaultInfo.startFundingTime = startFundingTime;
         vaultInfo.endFundingTime = endFundingTime;
         vaultInfo.initialPrice = initialPrice;
+        vaultInfo.defaultExpectedPrice = defaultExpectedPrice;
         // Default value: vaultInfo.boughtPrice = 0;
         // Default value: vaultInfo.sellingPrice = 0;
         // Default value: vaultInfo.totalAmount = 0;
@@ -300,7 +304,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         //Ver 1.0 only processes to Funded Phase if bought price <= initialPrice
         if(boughtPrice <= vaultInfo.initialPrice){
             vaultInfo.vaultState = VaultState.FUNDED;
-            // Call inner function to buy nft
+            // Call inner function to buy nft from backend.
         } else 
         {
             vaultInfo.vaultState = VaultState.ENDED;
@@ -507,7 +511,35 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         userListInVault = _vaultUsers[vaultID];
     }
 
-    
+
+    /**
+     * @dev Internal function to retrieve calculated expected selling price.
+     *         +) Vaule_expected_selling_price = (User_voted_expected_total_share + Default_voted_expected_total_share ) / Vault_total_amount
+     *         +) User_voted_expected_total_share = (User_voted_expected_price * User_DidVote_contribution_amount ) 
+     *         +) Default_voted_expected_total_share = (Vault_default_expected_price + User_DidNotVote_contribution_amount ) 
+     * @param vaultID ID of selected vault.
+     *
+     * @return expectedSellingPrice Return the calculated expected selling price. 
+     */
+    function _getVaultExpectedSellingPrice(bytes32 vaultID)
+        internal
+        view
+        returns (uint expectedSellingPrice){
+
+        address[] memory vaultUser = _vaultUsers[vaultID];
+        //Refund to user's spending wallet all money deposited into vault
+        uint userVotedExpectedTotalShare;
+        uint userDefaultExpectedTotalShare;
+        for(uint i = 0; i< vaultUser.length; i++){
+            if(_userContributions[vaultID][vaultUser[i]].expectedSellingPrice != 0){
+                userVotedExpectedTotalShare += _userContributions[vaultID][vaultUser[i]].expectedSellingPrice * _userContributions[vaultID][vaultUser[i]].contributionAmount;
+            } else {
+                userVotedExpectedTotalShare += _vaultInfos[vaultID].defaultExpectedPrice * _userContributions[vaultID][vaultUser[i]].contributionAmount;
+            }
+        }
+
+        expectedSellingPrice = ( userVotedExpectedTotalShare + userDefaultExpectedTotalShare ) / _vaultInfos[vaultID].totalAmount;
+    }
 
     /**
      * @dev Internal function to check if vault id exists.
