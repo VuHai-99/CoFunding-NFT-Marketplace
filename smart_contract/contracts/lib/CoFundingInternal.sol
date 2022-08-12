@@ -74,7 +74,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         // Default value: vaultInfo.sellingPrice = 0;
         // Default value: vaultInfo.totalAmount = 0;
         // Default value: vaultInfo.vaultState = VaultState.CREATED;
-        emit CreateVault(vaultID,nftCollection,nftID,startFundingTime,endFundingTime,initialPrice);
+        emit CreateVault(vaultID,nftCollection,nftID,startFundingTime,endFundingTime,initialPrice, defaultExpectedPrice);
     }
 
     /**
@@ -94,6 +94,10 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
 
         UserContribution storage usercontribution = _userContributions[vaultID][msg.sender];
         usercontribution.expectedSellingPrice = expectedSellingPrice;
+
+        uint vaultSellingPrice = _getVaultExpectedSellingPrice(vaultID);
+
+        emit UserSetSellingPrice(vaultID, expectedSellingPrice, vaultSellingPrice);
     }
 
     /**
@@ -579,7 +583,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
             revert VaultNotExist();
         }
         if(vaultInfo.vaultState == VaultState.ENDED || vaultInfo.vaultState == VaultState.DISABLED){
-            revert VaultIsEndedOrDisabled();
+            revert VaultEndedOrDisabled();
         }
         _;
     }
