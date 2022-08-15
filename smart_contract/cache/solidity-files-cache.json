@@ -154,8 +154,8 @@
       "artifacts": []
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingErrorsAndEvents.sol": {
-      "lastModificationDate": 1659959161015,
-      "contentHash": "573e072a6680dd1f1ff0b9b6fb009693",
+      "lastModificationDate": 1660286863397,
+      "contentHash": "e8268574ebe3a1fc981cf2808a204f4a",
       "sourceName": "contracts/interfaces/CoFundingErrorsAndEvents.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -300,8 +300,8 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingInternal.sol": {
-      "lastModificationDate": 1660285866362,
-      "contentHash": "e0a24cd33d920feea95390f6439ad64a",
+      "lastModificationDate": 1660286858289,
+      "contentHash": "7755ac58f2479819b5fd52ca22a5b157",
       "sourceName": "contracts/lib/CoFundingInternal.sol",
       "solcConfig": {
         "version": "0.8.14",

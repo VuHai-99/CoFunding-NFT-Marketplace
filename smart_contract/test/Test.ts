@@ -2,7 +2,10 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { CoFundingInterface } from "../typechain-types";
 import { coFundingUtilsFixture } from "./utils/fixtures";
 import { ethers } from "hardhat";
-
+import { faucet } from "./utils/faucet";
+import {
+    randomHex,
+} from "./utils/encoding";
 describe("Test new way of creating test", async function () {
 
     // let owner: SignerWithAddress;
@@ -11,9 +14,13 @@ describe("Test new way of creating test", async function () {
     let coFunding: CoFundingInterface;
 
     before(async () => {
-        [owner] = await ethers.getSigners();
+        await faucet(owner.address, provider);
         ({
             coFunding
-        } = await coFundingUtilsFixture(owner))
+        } = await coFundingUtilsFixture(owner));
+    });
+
+    it("Test it", async function (){
+        console.log(coFunding.address);
     });
 });

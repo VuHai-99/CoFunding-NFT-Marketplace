@@ -3,8 +3,6 @@ import { ethers } from "hardhat";
 import type { JsonRpcSigner } from "@ethersproject/providers";
 import type { Contract, Wallet } from "ethers";
 
-import "dotenv/config";
-
 export const deployContract = async <C extends Contract>(
   name: string,
   signer: JsonRpcSigner | Wallet,

@@ -30,7 +30,7 @@ export const coFundingFixture =  async (
     owner: Wallet
 ) => {
     let coFunding: CoFundingInterface;
-    coFunding = await deployContract("CoFunding", owner);
+    coFunding = await deployContract("CoFunding", owner, owner.address);
 
     return {
         coFunding

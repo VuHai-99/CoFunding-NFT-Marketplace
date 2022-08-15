@@ -27,7 +27,6 @@ import { coFundingFixture } from "./cofunding";
 const { provider } = ethers;
 
 export const coFundingUtilsFixture = async (owner: Wallet) => {
-    const { chainId } = await provider.getNetwork();
     const {coFunding} = await coFundingFixture(
         owner
     );
