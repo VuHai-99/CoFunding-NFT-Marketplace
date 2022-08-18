@@ -8,9 +8,8 @@ import {ArrayHelpers} from "../helpers/ArrayHelpers.sol";
 import { SeaportInterface } from "../seaport/contracts/interfaces/SeaportInterface.sol";
 import { Order, BasicOrderParameters } from "../seaport/contracts/lib/ConsiderationStructs.sol";
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
+import {Ownable} from "../helpers/Ownable.sol";
+import {ReentrancyGuard} from "../helpers/ReentrancyGuard.sol";
 
 contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, ReentrancyGuard  {
     //Track status of each Vault Info

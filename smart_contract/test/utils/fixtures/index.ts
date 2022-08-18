@@ -27,12 +27,16 @@ import { coFundingFixture } from "./cofunding";
 const { provider } = ethers;
 
 export const coFundingUtilsFixture = async (owner: Wallet) => {
-    const {coFunding} = await coFundingFixture(
+    const {
+        coFunding,
+        createVaultFunctionDataStructure
+    } = await coFundingFixture(
         owner
     );
 
     return {
-        coFunding
+        coFunding,
+        createVaultFunctionDataStructure
     }
 };
   

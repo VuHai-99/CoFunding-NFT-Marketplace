@@ -32,9 +32,63 @@ export const coFundingFixture =  async (
     let coFunding: CoFundingInterface;
     coFunding = await deployContract("CoFunding", owner, owner.address);
 
-    return {
-        coFunding
+    const convertNumberToBytes32 = (vaultID: number) => {
+        let vaultIDString = vaultID.toString();
+        let res = "0x";
+        for (let i: number = 0; i < (64 - vaultIDString.length); i++){
+            res = res.concat("0");
+        }
+        res = res.concat(vaultIDString);
+        return res;
     }
+
+    const createVaultFunctionDataStructure = (
+        vaultID: number,
+        nftCollection: string,
+        nftID: number,
+        startFundingTime: number,
+        endFundingTime: number,
+        initialPrice: number,
+        defaultExpectedPrice: number
+    ) => {
+        let vaultIDBytes32 = convertNumberToBytes32(vaultID);
+        const createVaultParamObj = {
+            vaultID: vaultIDBytes32,
+            nftCollection: nftCollection,
+            nftID: nftID,
+            startFundingTime: startFundingTime,
+            endFundingTime: endFundingTime,
+            initialPrice: initialPrice,
+            defaultExpectedPrice: defaultExpectedPrice
+        };
+        const createVaultParamTuple:[
+            string,
+            string,
+            number,
+            number,
+            number,
+            number,
+            number
+        ] = [
+            vaultIDBytes32,
+            nftCollection,
+            nftID,
+            startFundingTime,
+            endFundingTime,
+            initialPrice,
+            defaultExpectedPrice
+        ];
+
+        return {
+            createVaultParamObj,
+            createVaultParamTuple
+        }
+    }
+
+    return {
+        coFunding,
+        createVaultFunctionDataStructure,
+    };
 };
   
 export type CoFundingFixtures = Awaited<ReturnType<typeof coFundingFixture>>;  
