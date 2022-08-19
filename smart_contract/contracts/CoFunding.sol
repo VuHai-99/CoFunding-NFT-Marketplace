@@ -373,7 +373,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
         view
         returns (uint expectedSellingPrice){
 
-        _getVaultExpectedSellingPrice(vaultID);
+        expectedSellingPrice = _getVaultExpectedSellingPrice(vaultID);
     }
 }
  

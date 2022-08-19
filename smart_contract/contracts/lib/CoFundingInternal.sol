@@ -220,6 +220,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
     function _removeUserFromVault(bytes32 vaultID)
         internal {
         if(_userContributions[vaultID][msg.sender].contributionAmount == 0){
+            _userContributions[vaultID][msg.sender].expectedSellingPrice = 0;
             _removeAddressFromUniqueAddressArray(msg.sender,_vaultUsers[vaultID]);
         }
     }
@@ -517,9 +518,13 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
 
     /**
      * @dev Internal function to retrieve calculated expected selling price.
-     *         +) Vaule_expected_selling_price = (User_voted_expected_total_share + Default_voted_expected_total_share ) / Vault_total_amount
+     *      -)If(Vault_total_amount <= Initial_price)
+     *         +) Vaule_expected_selling_price = (User_voted_expected_total_share + Default_voted_expected_total_share ) / Initial_price
      *         +) User_voted_expected_total_share = (User_voted_expected_price * User_DidVote_contribution_amount ) 
      *         +) Default_voted_expected_total_share = (Vault_default_expected_price + User_DidNotVote_contribution_amount ) 
+     *      -)Else(Vault_total_amount > Initial_price)
+     *         +) Vaule_expected_selling_price = (User_voted_expected_total_share) / Vault_total_amount
+     *         +) User_voted_expected_total_share = (User_voted_expected_price * User_DidVote_contribution_amount ) 
      * @param vaultID ID of selected vault.
      *
      * @return expectedSellingPrice Return the calculated expected selling price. 
@@ -532,16 +537,29 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         address[] memory vaultUser = _vaultUsers[vaultID];
         //Refund to user's spending wallet all money deposited into vault
         uint userVotedExpectedTotalShare;
-        uint userDefaultExpectedTotalShare;
-        for(uint i = 0; i< vaultUser.length; i++){
-            if(_userContributions[vaultID][vaultUser[i]].expectedSellingPrice != 0){
-                userVotedExpectedTotalShare += _userContributions[vaultID][vaultUser[i]].expectedSellingPrice * _userContributions[vaultID][vaultUser[i]].contributionAmount;
-            } else {
-                userVotedExpectedTotalShare += _vaultInfos[vaultID].defaultExpectedPrice * _userContributions[vaultID][vaultUser[i]].contributionAmount;
-            }
-        }
+        
+        if(_vaultInfos[vaultID].totalAmount <= _vaultInfos[vaultID].initialPrice){
+            uint userDefaultExpectedTotalShare;
+            for(uint i = 0; i< vaultUser.length; i++){
+                if(_userContributions[vaultID][vaultUser[i]].expectedSellingPrice != 0){
+                    userVotedExpectedTotalShare += _userContributions[vaultID][vaultUser[i]].expectedSellingPrice * _userContributions[vaultID][vaultUser[i]].contributionAmount;
+                }
 
-        expectedSellingPrice = ( userVotedExpectedTotalShare + userDefaultExpectedTotalShare ) / _vaultInfos[vaultID].totalAmount;
+            }
+            userDefaultExpectedTotalShare = (_vaultInfos[vaultID].initialPrice - _vaultInfos[vaultID].totalAmount) * _vaultInfos[vaultID].defaultExpectedPrice;
+            expectedSellingPrice = ( userVotedExpectedTotalShare + userDefaultExpectedTotalShare ) / _vaultInfos[vaultID].initialPrice;
+        } else {
+            uint userDefaultExpected = _vaultInfos[vaultID].totalAmount; 
+            for(uint i = 0; i< vaultUser.length; i++){
+                if(_userContributions[vaultID][vaultUser[i]].expectedSellingPrice != 0){
+                    userVotedExpectedTotalShare += _userContributions[vaultID][vaultUser[i]].expectedSellingPrice * _userContributions[vaultID][vaultUser[i]].contributionAmount;
+                    userDefaultExpected -= _userContributions[vaultID][vaultUser[i]].contributionAmount;
+                } 
+
+            }
+            expectedSellingPrice = (userVotedExpectedTotalShare + (_vaultInfos[vaultID].defaultExpectedPrice * userDefaultExpected)) / _vaultInfos[vaultID].totalAmount; 
+        }
+        
     }
 
     /**

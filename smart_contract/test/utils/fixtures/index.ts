@@ -26,7 +26,8 @@ export const coFundingUtilsFixture = async (owner: Wallet) => {
     const {
         coFunding,
         createVaultFunctionDataStructure,
-        convertNumberToBytes32
+        convertBigNumberToBytes32,
+        calculateExpectedSellingPrice
     } = await coFundingFixture(
         owner
     );
@@ -55,7 +56,8 @@ export const coFundingUtilsFixture = async (owner: Wallet) => {
         testERC721,
 
         convertStructToOutputStruct,
-        convertNumberToBytes32
+        convertBigNumberToBytes32,
+        calculateExpectedSellingPrice
     }
 
 };

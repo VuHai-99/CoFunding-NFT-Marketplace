@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/CoFunding.sol": {
-      "lastModificationDate": 1660823984877,
-      "contentHash": "e00bd0f79a43937933fe4bb05527c65c",
+      "lastModificationDate": 1660896699271,
+      "contentHash": "8e4e6d5a6b987f088b91fdae00e4655b",
       "sourceName": "contracts/CoFunding.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -84,7 +84,7 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingStructs.sol": {
-      "lastModificationDate": 1660821007400,
+      "lastModificationDate": 1660883301245,
       "contentHash": "6652bfc24f5d141e8da311ecc65c40ab",
       "sourceName": "contracts/lib/CoFundingStructs.sol",
       "solcConfig": {
@@ -190,8 +190,8 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingInternal.sol": {
-      "lastModificationDate": 1660824165043,
-      "contentHash": "f2af526c604c0d5e34a760a2e54a2c96",
+      "lastModificationDate": 1660901568662,
+      "contentHash": "696a8e3906ddf74494d7bf922a8bd3b0",
       "sourceName": "contracts/lib/CoFundingInternal.sol",
       "solcConfig": {
         "version": "0.8.14",
