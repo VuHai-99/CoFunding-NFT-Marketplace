@@ -88,6 +88,7 @@ export const coFundingFixture =  async (
     return {
         coFunding,
         createVaultFunctionDataStructure,
+        convertNumberToBytes32,
     };
 };
   
