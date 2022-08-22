@@ -135,12 +135,23 @@ export const coFundingFixture =  async (
     async function errorRevertVaultNotInFundingProcess(
         account: Wallet,
         vaultID: string,
-        functionData: string
+        functionData: string,
+        value?: BigNumberish
     ){
-        let tx = {
-            to: coFunding.address,
-            data: functionData
+        let tx:any;
+        if(value === undefined){
+            tx = {
+                to: coFunding.address,
+                data: functionData
+            }
+        } else {
+            tx = {
+                to: coFunding.address,
+                data: functionData,
+                value: value
+            }
         }
+        
         await coFunding.connect(owner).changeStateVault(vaultID,1);
         await expect(
             account.sendTransaction(tx)
@@ -157,12 +168,98 @@ export const coFundingFixture =  async (
         ).to.be.revertedWith("VaultNotInFundingProcess");
     }
 
+    async function errorRevertIsVaultIDExitedAndInFundingProcess(
+        account: Wallet,
+        vaultID: string,
+        functionData1: string,
+        functionData2: string,
+        value?: BigNumberish
+    ){
+        let tx1:any;
+        let tx2:any;
+        if(value === undefined){
+            tx1 = {
+                to: coFunding.address,
+                data: functionData1
+            }
+            tx2 = {
+                to: coFunding.address,
+                data: functionData2
+            }
+        } else {
+            tx1 = {
+                to: coFunding.address,
+                data: functionData1,
+                value: value
+            }
+            tx2 = {
+                to: coFunding.address,
+                data: functionData2,
+                value: value
+            }
+        }
+        await expect(
+            account.sendTransaction(tx1)
+        ).to.be.revertedWith("IsVaultIDExitedAndInFundingProcess"); 
+
+        await coFunding.connect(owner).changeStateVault(vaultID,1);
+        await expect(
+            account.sendTransaction(tx2)
+        ).to.be.revertedWith("IsVaultIDExitedAndInFundingProcess");        
+
+        await coFunding.connect(owner).changeStateVault(vaultID,2);
+        await expect(
+            account.sendTransaction(tx2)
+        ).to.be.revertedWith("IsVaultIDExitedAndInFundingProcess");
+
+        await coFunding.connect(owner).changeStateVault(vaultID,3);
+        await expect(
+            account.sendTransaction(tx2)
+        ).to.be.revertedWith("IsVaultIDExitedAndInFundingProcess");
+    }
+
+    
+
+    async function errorRevertInvalidMoneyTransfer(
+        account: Wallet,
+        functionData: string,
+        payable: Boolean
+    ){
+        let tx1: any;
+        let tx2: any;
+        if(payable === false){
+            tx1 = {
+                to: coFunding.address,
+                data: functionData
+            }
+        } else {
+            tx1 = {
+                to: coFunding.address,
+                data: functionData,
+                value: BigNumber.from(0)
+            };
+
+            tx2 = {
+                to: coFunding.address,
+                data: functionData
+            };
+            await expect(
+                account.sendTransaction(tx2)
+            ).to.be.revertedWith("InvalidMoneyTransfer");
+        }
+        await expect(
+            account.sendTransaction(tx1)
+        ).to.be.revertedWith("InvalidMoneyTransfer");
+    }
+
     return {
         coFunding,
         createVaultFunctionDataStructure,
         convertBigNumberToBytes32,
         calculateExpectedSellingPrice,
-        errorRevertVaultNotInFundingProcess
+        errorRevertVaultNotInFundingProcess,
+        errorRevertIsVaultIDExitedAndInFundingProcess,
+        errorRevertInvalidMoneyTransfer
     };
 };
   

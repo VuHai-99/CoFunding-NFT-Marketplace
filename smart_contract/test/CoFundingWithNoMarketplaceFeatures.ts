@@ -36,6 +36,8 @@ describe("Test all CoFunding function with no marketplace related features.", as
     let calculateExpectedSellingPrice: CoFundingUtilsFixtures["calculateExpectedSellingPrice"];
     let balanceCheck: CoFundingUtilsFixtures["balanceCheck"];
     let errorRevertVaultNotInFundingProcess: CoFundingUtilsFixtures["errorRevertVaultNotInFundingProcess"];
+    let errorRevertIsVaultIDExitedAndInFundingProcess: CoFundingUtilsFixtures["errorRevertIsVaultIDExitedAndInFundingProcess"];
+    let errorRevertInvalidMoneyTransfer: CoFundingUtilsFixtures["errorRevertInvalidMoneyTransfer"];
     
     before(async () => {
         await faucet(owner.address, provider);
@@ -53,7 +55,9 @@ describe("Test all CoFunding function with no marketplace related features.", as
             calculateExpectedSellingPrice,
             balanceCheck,
 
-            errorRevertVaultNotInFundingProcess
+            errorRevertVaultNotInFundingProcess,
+            errorRevertIsVaultIDExitedAndInFundingProcess,
+            errorRevertInvalidMoneyTransfer
 
         } = await coFundingUtilsFixture(owner));
     });
@@ -428,14 +432,14 @@ describe("Test all CoFunding function with no marketplace related features.", as
             );
         });
         it("Assert (false) error InvalidMoneyTransfer", async () => {
-            let depositDirectlyToSpendingWalletAmount = BigNumber.from('0');
-            await expect(
-                coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositDirectlyToSpendingWalletAmount})
-            ).to.be.revertedWith("InvalidMoneyTransfer");
-            await expect(
-                coFunding.connect(account1).depositDirectlyToSpendingWallet()
-            ).to.be.revertedWith("InvalidMoneyTransfer");
+            const {sampleVaultData} = await createSampleVault();
+            let functionData = coFunding.interface.encodeFunctionData(
+                "depositDirectlyToSpendingWallet"
+            );
+            
+            await errorRevertInvalidMoneyTransfer(account1,functionData,true);
         });
+        
     });
 
     describe("Withdraw Directly From Spending Wallet", async () => {
@@ -472,9 +476,14 @@ describe("Test all CoFunding function with no marketplace related features.", as
             let depositDirectlyToSpendingWalletAmount = BigNumber.from('1000');
             await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositDirectlyToSpendingWalletAmount});
             let withdrawDirectlyFromSpendingWalletAmount = BigNumber.from('0');
-            await expect(
-                coFunding.connect(account1).withdrawDirectlyFromSpendingWallet(withdrawDirectlyFromSpendingWalletAmount)
-            ).to.be.revertedWith("InvalidMoneyTransfer");
+            let functionData = coFunding.interface.encodeFunctionData(
+                "withdrawDirectlyFromSpendingWallet",
+                [
+                    withdrawDirectlyFromSpendingWalletAmount
+                ]
+            );
+            
+            await errorRevertInvalidMoneyTransfer(account1,functionData,false);
         });
         it("Assert (false) error NotEnoughMoneyInSpendingWallet", async () => {
             let depositDirectlyToSpendingWalletAmount = BigNumber.from('1000');
@@ -536,15 +545,22 @@ describe("Test all CoFunding function with no marketplace related features.", as
                 expectedUserListInVault
             );
         });
-        it("Assert (false) InvalidMoneyTransfer", async () => {
+        it("Assert (false) error InvalidMoneyTransfer", async () => {
             const {sampleVaultData} = await createSampleVault();
             
             let depositDirectlyToSpendingWalletAmount = BigNumber.from(10000);
             await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositDirectlyToSpendingWalletAmount});
             let depositToVaultFromSpendingWalletAmount = BigNumber.from(0);
-            await expect(
-                coFunding.connect(account1).depositToVaultFromSpendingWallet(sampleVaultData.vaultID, depositToVaultFromSpendingWalletAmount)
-            ).to.be.revertedWith("InvalidMoneyTransfer");
+
+            let functionData = coFunding.interface.encodeFunctionData(
+                "depositToVaultFromSpendingWallet",
+                [
+                    sampleVaultData.vaultID, 
+                    depositToVaultFromSpendingWalletAmount
+                ]
+            );
+            
+            await errorRevertInvalidMoneyTransfer(account1,functionData,false);
         });
         it("Assert (false) NotEnoughMoneyInSpendingWallet", async () => {
             const {sampleVaultData} = await createSampleVault();
@@ -657,13 +673,17 @@ describe("Test all CoFunding function with no marketplace related features.", as
             const {sampleVaultData} = await createSampleVault();
             let depositToVaultFromSpendingWalletAmount = BigNumber.from('0');
             let expectedSellingPrice = sampleVaultData.defaultExpectedPrice.add(1000);
-            await expect(
-                coFunding.connect(account1).depositToVaultFromSpendingWalletAndSetSellingPrice(
+
+            let functionData = coFunding.interface.encodeFunctionData(
+                "depositToVaultFromSpendingWalletAndSetSellingPrice",
+                [
                     sampleVaultData.vaultID,
                     depositToVaultFromSpendingWalletAmount,
                     expectedSellingPrice
-                )
-            ).to.be.revertedWith("InvalidMoneyTransfer");
+                ]
+            );
+            
+            await errorRevertInvalidMoneyTransfer(account1,functionData,false);
         });
         it("Assert (false) error NotEnoughMoneyInSpendingWallet", async () => {
             const {sampleVaultData} = await createSampleVault();
@@ -714,8 +734,6 @@ describe("Test all CoFunding function with no marketplace related features.", as
         
     });
 
-    */
-
     describe("Deposit Directly To Vault", async () => {
         it("Assert (true) deposit directly to vault", async () => {
             const {sampleVaultData} = await createSampleVault();
@@ -760,10 +778,209 @@ describe("Test all CoFunding function with no marketplace related features.", as
                 expectedUserListInVault
             );
         });
-        // it("Assert (false)", async () => {
-        // });
+
+        it("Assert (true) deposit 2 times directly to vault", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let account1DepositToVaultDirectlyAmount = BigNumber.from('10000');
+            let account2DepositToVaultDirectlyAmount = BigNumber.from('8000');
+
+            await coFunding.connect(account1).depositDirectlyToVault(sampleVaultData.vaultID,{value: account1DepositToVaultDirectlyAmount});
+            await coFunding.connect(account1).depositDirectlyToVault(sampleVaultData.vaultID,{value: account1DepositToVaultDirectlyAmount});
+            await coFunding.connect(account2).depositDirectlyToVault(sampleVaultData.vaultID,{value: account2DepositToVaultDirectlyAmount});
+            let account1ExpectedUserContribution:UserContributionStruct = {
+                contributionAmount: account1DepositToVaultDirectlyAmount.add(account1DepositToVaultDirectlyAmount),
+                expectedSellingPrice: BigNumber.from(0)
+            }
+            let account2ExpectedUserContribution:UserContributionStruct = {
+                contributionAmount: account2DepositToVaultDirectlyAmount,
+                expectedSellingPrice: BigNumber.from(0)
+            }
+            expect(await coFunding.getContributionInVault(sampleVaultData.vaultID, account1.address)).to.deep.equal(
+                convertStructToOutputStruct(account1ExpectedUserContribution)
+            );
+            expect(await coFunding.getContributionInVault(sampleVaultData.vaultID, account2.address)).to.deep.equal(
+                convertStructToOutputStruct(account2ExpectedUserContribution)
+            );
+
+            expect(await coFunding.getVaultTotalContribution(sampleVaultData.vaultID)).to.equal(
+                account1DepositToVaultDirectlyAmount.add(account1DepositToVaultDirectlyAmount.add(account2DepositToVaultDirectlyAmount))
+            );
+
+
+            const expectedUserListInVault = [account1.address,account2.address];
+            expect(await coFunding.getListOfUserInVault(sampleVaultData.vaultID)).to.deep.equal(
+                expectedUserListInVault
+            );
+        });
+
+        it("Assert (false) error IsVaultIDExitedAndInFundingProcess", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let functionData1 = coFunding.interface.encodeFunctionData(
+                "depositDirectlyToVault",
+                [
+                    convertBigNumberToBytes32(sampleVaultData.vaultIDBigInt.add(2))
+                ]
+            );
+
+            let functionData2 = coFunding.interface.encodeFunctionData(
+                "depositDirectlyToVault",
+                [
+                    sampleVaultData.vaultID
+                ]
+            );
+            
+            await errorRevertIsVaultIDExitedAndInFundingProcess(account1,sampleVaultData.vaultID,functionData1,functionData2,BigNumber.from(1000));
+        });
+        it("Assert (false) error InvalidMoneyTransfer", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let functionData = coFunding.interface.encodeFunctionData(
+                "depositDirectlyToVault",
+                [
+                    sampleVaultData.vaultID
+                ]
+            );
+            
+            await errorRevertInvalidMoneyTransfer(account1,functionData,true);
+        });
     });
 
+
+    describe("Deposit Directly And From Spending Wallet To Vault", async () => {
+        it("Assert (true)", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let depositToVaultDirectlyAmount = BigNumber.from('10000');
+            let depositToVaultFromSpendingWalletAmount = BigNumber.from('8000');
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositToVaultDirectlyAmount});
+            let vaultContributionBefore = await coFunding.getContributionInVault(
+                sampleVaultData.vaultID,
+                account1.address
+            )
+            let tx = coFunding.connect(account1).depositDirectlyAndFromSpendingWalletToVault(
+                sampleVaultData.vaultID,
+                depositToVaultFromSpendingWalletAmount,
+                {value: depositToVaultDirectlyAmount}
+            );
+
+            const {
+                result
+            } = await balanceCheck(
+                tx,
+                [
+                    {
+                        address: account1.address,
+                        amount: depositToVaultDirectlyAmount
+                    }
+                ],
+                [
+                    {
+                        address: coFunding.address,
+                        amount: depositToVaultDirectlyAmount
+                    }
+                ]
+            );
+            expect(result).to.equal(
+                true
+            );
+
+            let expectedUserContribution:UserContributionStruct = {
+                contributionAmount: vaultContributionBefore.contributionAmount.add(
+                    depositToVaultFromSpendingWalletAmount
+                    ).add(depositToVaultDirectlyAmount),
+                expectedSellingPrice: BigNumber.from(0)
+            }
+
+            expect(
+                await coFunding.getContributionInVault(
+                sampleVaultData.vaultID,
+                account1.address
+            )).to.deep.equal(
+                convertStructToOutputStruct(expectedUserContribution)
+            );
+        });
+
+        it("Assert (false) error IsVaultIDExitedAndInFundingProcess", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let depositToVaultDirectlyAmount = BigNumber.from('10000');
+            let depositToVaultFromSpendingWalletAmount = BigNumber.from('8000');
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositToVaultDirectlyAmount});
+            let functionData1 = coFunding.interface.encodeFunctionData(
+                "depositDirectlyAndFromSpendingWalletToVault",
+                [
+                    convertBigNumberToBytes32(sampleVaultData.vaultIDBigInt.add(2)),
+                    depositToVaultFromSpendingWalletAmount,
+                ]
+            );
+
+            let functionData2 = coFunding.interface.encodeFunctionData(
+                "depositDirectlyAndFromSpendingWalletToVault",
+                [
+                    sampleVaultData.vaultID,
+                    depositToVaultFromSpendingWalletAmount,
+                ]
+            );
+            
+            await errorRevertIsVaultIDExitedAndInFundingProcess(account1,sampleVaultData.vaultID,functionData1,functionData2,BigNumber.from(1000));
+        });
+
+        it("Assert (false) error InvalidMoneyTransfer", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let depositToVaultDirectlyAmount = BigNumber.from('10000');
+            let depositToVaultFromSpendingWalletAmount = BigNumber.from('8000');
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositToVaultDirectlyAmount});
+            let functionData = coFunding.interface.encodeFunctionData(
+                "depositDirectlyAndFromSpendingWalletToVault",
+                [
+                    sampleVaultData.vaultID,
+                    depositToVaultFromSpendingWalletAmount,
+                ]
+            );
+            
+            await errorRevertInvalidMoneyTransfer(account1,functionData,true);
+        });
+
+        it("Assert (false) error NotEnoughMoneyInSpendingWallet", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let depositToVaultDirectlyAmount = BigNumber.from('10000');
+            let depositToVaultFromSpendingWalletAmount = BigNumber.from('18000');
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositToVaultDirectlyAmount});
+            await expect(
+                coFunding.connect(account1).depositDirectlyAndFromSpendingWalletToVault(
+                    sampleVaultData.vaultID,
+                    depositToVaultFromSpendingWalletAmount,
+                    {value: depositToVaultDirectlyAmount}
+                )
+            ).to.be.revertedWith("NotEnoughMoneyInSpendingWallet");
+        });
+        it("Assert (false) error VaultNotExist", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let depositToVaultDirectlyAmount = BigNumber.from('10000');
+            let depositToVaultFromSpendingWalletAmount = BigNumber.from('8000');
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositToVaultDirectlyAmount});
+            await expect(
+                coFunding.connect(account1).depositDirectlyAndFromSpendingWalletToVault(
+                    convertBigNumberToBytes32(sampleVaultData.vaultIDBigInt.add(2)),
+                    depositToVaultFromSpendingWalletAmount,
+                    {value: depositToVaultDirectlyAmount}
+                )
+            ).to.be.revertedWith("VaultNotExist");
+        });
+        it("Assert (false) error VaultNotInFundingProcess", async () => {
+            const {sampleVaultData} = await createSampleVault();
+            let depositToVaultDirectlyAmount = BigNumber.from('10000');
+            let depositToVaultFromSpendingWalletAmount = BigNumber.from('8000');
+            await coFunding.connect(account1).depositDirectlyToSpendingWallet({value: depositToVaultDirectlyAmount});
+            let functionData = coFunding.interface.encodeFunctionData(
+                "depositDirectlyAndFromSpendingWalletToVault",
+                [
+                    sampleVaultData.vaultID,
+                    depositToVaultFromSpendingWalletAmount,
+                ]
+            );
+            
+            await errorRevertVaultNotInFundingProcess(account1,sampleVaultData.vaultID,functionData);      
+        });
+    });
+*/
     // describe("", async () => {
     //     it("Assert (true)", async () => {
     //     });

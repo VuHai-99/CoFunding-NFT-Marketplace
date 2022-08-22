@@ -460,7 +460,6 @@ describe("CoFunding with no marketplace features", async function () {
             2. Error IsVaultIDExitedAndInFundingProcess
             3. Error InvalidMoneyTransfer
             4. Successfully deposit to vault directly then deposit second time. Check that first time _vaultUsers have new item and second dont.
-            5. Successfully deposit to vault from spending wallet. ( Check _userContributions and _vaultUsers and _vaultInfos and _userSpendingWallets)
             6. Deposit to vault from spending wallet error NotEnoughMoneyInSpendingWallet
             7. Deposit to vault from spending wallet with error vaultID not valid
             8. Deposit to vault from spending wallet with error vaultID not in funding process.
