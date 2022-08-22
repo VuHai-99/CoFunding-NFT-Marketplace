@@ -1,4 +1,4 @@
-// import { expect } from "chai";
+import { expect } from "chai";
 // import { Contract, constants } from "ethers";
 import hre, { ethers } from "hardhat";
 
@@ -31,6 +31,10 @@ export const coFundingFixture =  async (
 ) => {
     let coFunding: CoFundingInterface;
     coFunding = await deployContract("CoFunding", owner, owner.address);
+    let validNewNFTID = 1;
+    let validNewVaultID = 1;
+    let defaultInitialPrice = 2000;
+    let defaultExpectedPrice = 2500;
 
     const convertBigNumberToBytes32 = (vaultID: BigNumberish) => {
         let vaultIDString = vaultID.toString();
@@ -61,7 +65,7 @@ export const coFundingFixture =  async (
             let userDefaultExpectedTotalShare:BigNumber = BigNumber.from(0);
             for (let i:number = 0; i< vaultUser.length; i++){
                 let userContribution = await coFunding.getContributionInVault(vaultID,vaultUser[i]);
-                if(userContribution.expectedSellingPrice != BigNumber.from(0)){
+                if(!userContribution.expectedSellingPrice.eq(0)){
                     userVotedExpectedTotalShare = userVotedExpectedTotalShare.add(userContribution.expectedSellingPrice.mul(userContribution.contributionAmount));
                 }
                 userDefaultExpectedTotalShare = (vaultInfo.initialPrice.sub(vaultInfo.totalAmount)).mul(vaultInfo.defaultExpectedPrice);
@@ -72,13 +76,14 @@ export const coFundingFixture =  async (
             let userDefaultExpected = vaultInfo.totalAmount;
             for (let i:number = 0; i< vaultUser.length; i++){
                 let userContribution = await coFunding.getContributionInVault(vaultID,vaultUser[i]);
-                if(userContribution.expectedSellingPrice != BigNumber.from(0)){
+                if(!userContribution.expectedSellingPrice.eq(0)){
                     userVotedExpectedTotalShare = userVotedExpectedTotalShare.add(userContribution.expectedSellingPrice.mul(userContribution.contributionAmount));
                     userDefaultExpected = userDefaultExpected.sub(userContribution.contributionAmount);
                 }
             }
             expectedSellingPrice = (userVotedExpectedTotalShare.add(vaultInfo.defaultExpectedPrice.mul(userDefaultExpected))).div(vaultInfo.totalAmount);
         }
+
         return expectedSellingPrice;
     };
 
@@ -123,6 +128,33 @@ export const coFundingFixture =  async (
             createVaultParamObj,
             createVaultParamTuple
         }
+    };
+    
+
+    //All Modifier/Error check function
+    async function errorRevertVaultNotInFundingProcess(
+        account: Wallet,
+        vaultID: string,
+        functionData: string
+    ){
+        let tx = {
+            to: coFunding.address,
+            data: functionData
+        }
+        await coFunding.connect(owner).changeStateVault(vaultID,1);
+        await expect(
+            account.sendTransaction(tx)
+        ).to.be.revertedWith("VaultNotInFundingProcess");        
+
+        await coFunding.connect(owner).changeStateVault(vaultID,2);
+        await expect(
+            account.sendTransaction(tx)
+        ).to.be.revertedWith("VaultNotInFundingProcess");
+
+        await coFunding.connect(owner).changeStateVault(vaultID,3);
+        await expect(
+            account.sendTransaction(tx)
+        ).to.be.revertedWith("VaultNotInFundingProcess");
     }
 
     return {
@@ -130,6 +162,7 @@ export const coFundingFixture =  async (
         createVaultFunctionDataStructure,
         convertBigNumberToBytes32,
         calculateExpectedSellingPrice,
+        errorRevertVaultNotInFundingProcess
     };
 };
   

@@ -395,10 +395,7 @@ describe("CoFunding with no marketplace features", async function () {
             3. Withdraw from spending wallet error NotEnoughMoneyInSpendingWallet
             4. Set selling price with error vaultID not valid
             5. Set selling price with error vaultID not in funding process.
-            6. Set selling price with error participant have not deposit money.
-            7. Successfully deposit to vault from spending wallet then deposit second time. Check that first time _vaultUsers have new item and second dont.
-            8. Set selling price with error vaultID not valid
-            9. Set selling price with error vaultID not in funding process.
+            6. Successfully deposit to vault from spending wallet then deposit second time. Check that first time _vaultUsers have new item and second dont.
             */
 
             let now = Math.floor(new Date().getTime() / 1000.0);
