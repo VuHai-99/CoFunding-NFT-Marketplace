@@ -151,9 +151,10 @@ interface CoFundingInterface {
      * @notice Money being withdraw both directly and from spending wallet.
      *
      * @param vaultID ID of selected vault.
-     * @param amountFromSpendingWallet withdraw amount.
+     * @param amountFromSpendingWallet withdraw from spending wallet amount.
+     * @param amountFromVault withdraw from vault amount.
      */
-    function withdrawDirectlyAndFromSpendingWalletToVault(bytes32 vaultID, uint amountFromSpendingWallet)
+    function withdrawDirectlyFromSpendingWalletAndVault(bytes32 vaultID, uint amountFromSpendingWallet, uint amountFromVault)
         external
         payable;
 

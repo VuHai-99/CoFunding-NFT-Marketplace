@@ -189,20 +189,16 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
             revert InvalidMoneyTransfer();
         }
 
-        //Check if enough money in user's vault
-        if (amount > _userContributions[vaultID][msg.sender].contributionAmount){
-            revert NotEnoughMoneyInUserVault();
-        }
-
         //Check if user already deposit into vault
         if (_userContributions[vaultID][msg.sender].contributionAmount == 0){
             revert UserHaveNotParticipatedInVault();
         }
 
-        //Check if enough money in total vault
-        if (amount > _vaultInfos[vaultID].totalAmount){
-            revert NotEnoughMoneyInTotalVault(); 
+        //Check if enough money in user's vault
+        if (amount > _userContributions[vaultID][msg.sender].contributionAmount){
+            revert NotEnoughMoneyInUserVault();
         }
+
 
         //Update storage value
         _userSpendingWallets[msg.sender] += amount;
@@ -255,18 +251,20 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
      */
     function _withdrawDirectlyFromVault(bytes32 vaultID, uint amount)
         internal
+        IsVaultIDExitedAndInFundingProcess(vaultID)
         nonReentrant {
         //Check if value sent is valid. Valid is >0
         if (amount <= 0){
             revert InvalidMoneyTransfer();
         }
+
+        if(_userContributions[vaultID][msg.sender].contributionAmount == 0){
+            revert UserHaveNotParticipatedInVault();
+        }
+
         //Check if withdraw value is more than in vault wallet
         if (amount > _userContributions[vaultID][msg.sender].contributionAmount){
             revert NotEnoughMoneyInUserVault();
-        }
-        //Check if enough money in total vault
-        if (amount > _vaultInfos[vaultID].totalAmount){
-            revert NotEnoughMoneyInTotalVault(); 
         }
 
         //Update storage value

@@ -74,11 +74,6 @@ interface CoFundingErrorsAndEvents {
     error NotEnoughMoneyInUserVault();
 
     /**
-     * @dev Revert with an error when vault is not have enough money.
-     */
-    error NotEnoughMoneyInTotalVault();
-
-    /**
      * @dev Revert with an error when trying to finish vault which not in Funded Process.
      */
     error VaultCannotBeFinish();
