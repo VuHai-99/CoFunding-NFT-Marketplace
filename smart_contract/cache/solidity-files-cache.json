@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/CoFunding.sol": {
-      "lastModificationDate": 1661245095379,
-      "contentHash": "216c8fd2cd49346a2b48d535e492ecc7",
+      "lastModificationDate": 1661352155542,
+      "contentHash": "49412ba21798fcddab90bb63d0f98912",
       "sourceName": "contracts/CoFunding.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -44,8 +44,8 @@
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingInterface.sol": {
-      "lastModificationDate": 1661243659449,
-      "contentHash": "ce3f08d19e489157084b177c1f9dac42",
+      "lastModificationDate": 1661352151907,
+      "contentHash": "36594a1ac243f26fa0d60446013d71dc",
       "sourceName": "contracts/interfaces/CoFundingInterface.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -153,45 +153,9 @@
       ],
       "artifacts": []
     },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingErrorsAndEvents.sol": {
-      "lastModificationDate": 1661227208814,
-      "contentHash": "0201739f072392b5bd259c9a0c9af5a4",
-      "sourceName": "contracts/interfaces/CoFundingErrorsAndEvents.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.13"
-      ],
-      "artifacts": [
-        "CoFundingErrorsAndEvents"
-      ]
-    },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/lib/CoFundingInternal.sol": {
-      "lastModificationDate": 1661241997985,
-      "contentHash": "7c75ed8d236aedaacfca68736f165912",
+      "lastModificationDate": 1661354893271,
+      "contentHash": "37125618e58c9622bb936ba75a50e137",
       "sourceName": "contracts/lib/CoFundingInternal.sol",
       "solcConfig": {
         "version": "0.8.14",
@@ -232,154 +196,6 @@
       ],
       "artifacts": [
         "CoFundingInternal"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/ArrayHelpers.sol": {
-      "lastModificationDate": 1660821007400,
-      "contentHash": "cd281b73551dbabbf270cbaaa95bfd21",
-      "sourceName": "contracts/helpers/ArrayHelpers.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.13"
-      ],
-      "artifacts": [
-        "ArrayHelpers"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC1155.sol": {
-      "lastModificationDate": 1660821070143,
-      "contentHash": "0f01131c8e9d81731a3655fb884c3231",
-      "sourceName": "@rari-capital/solmate/src/tokens/ERC1155.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ERC1155",
-        "ERC1155TokenReceiver"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC721.sol": {
-      "lastModificationDate": 1660821072943,
-      "contentHash": "224006de5bf59fbbf155dcaac8c3a955",
-      "sourceName": "@rari-capital/solmate/src/tokens/ERC721.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ERC721",
-        "ERC721TokenReceiver"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/interfaces/SeaportInterface.sol": {
-      "lastModificationDate": 1660821007400,
-      "contentHash": "1fd0e72e58feb3f5fae89ea04b6a44ae",
-      "sourceName": "contracts/seaport/contracts/interfaces/SeaportInterface.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../lib/ConsiderationStructs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "SeaportInterface"
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/lib/ConsiderationStructs.sol": {
@@ -451,6 +267,271 @@
         "^0.8.7"
       ],
       "artifacts": []
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/interfaces/CoFundingErrorsAndEvents.sol": {
+      "lastModificationDate": 1661227208814,
+      "contentHash": "0201739f072392b5bd259c9a0c9af5a4",
+      "sourceName": "contracts/interfaces/CoFundingErrorsAndEvents.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "CoFundingErrorsAndEvents"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/ArrayHelpers.sol": {
+      "lastModificationDate": 1660821007400,
+      "contentHash": "cd281b73551dbabbf270cbaaa95bfd21",
+      "sourceName": "contracts/helpers/ArrayHelpers.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "ArrayHelpers"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/interfaces/SeaportInterface.sol": {
+      "lastModificationDate": 1660821007400,
+      "contentHash": "1fd0e72e58feb3f5fae89ea04b6a44ae",
+      "sourceName": "contracts/seaport/contracts/interfaces/SeaportInterface.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../lib/ConsiderationStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "SeaportInterface"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/Ownable.sol": {
+      "lastModificationDate": 1660824075024,
+      "contentHash": "a5798bcd782391f6398252fc6d0585dd",
+      "sourceName": "contracts/helpers/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/ReentrancyGuard.sol": {
+      "lastModificationDate": 1660824113800,
+      "contentHash": "59a8137caffd6f696b75a7da9a897150",
+      "sourceName": "contracts/helpers/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/Context.sol": {
+      "lastModificationDate": 1660824067436,
+      "contentHash": "c4b296fb9a98a645ca52cc72c3fbae06",
+      "sourceName": "contracts/helpers/Context.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/test/MockCoFundingInternal.sol": {
+      "lastModificationDate": 1661354879843,
+      "contentHash": "d234358559f9c87af0e8f46694a4c746",
+      "sourceName": "contracts/test/MockCoFundingInternal.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../lib/CoFundingStructs.sol",
+        "../lib/CoFundingEnums.sol",
+        "../interfaces/CoFundingErrorsAndEvents.sol",
+        "../helpers/ArrayHelpers.sol",
+        "../seaport/contracts/interfaces/SeaportInterface.sol",
+        "../seaport/contracts/lib/ConsiderationStructs.sol",
+        "../helpers/Ownable.sol",
+        "../helpers/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "MockCoFundingInternal"
+      ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/zones/PausableZoneController.sol": {
       "lastModificationDate": 1660821007400,
@@ -1925,6 +2006,170 @@
         "AmountDerivationErrors"
       ]
     },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMockRevertBytes.sol": {
+      "lastModificationDate": 1660832565846,
+      "contentHash": "0434a74e6d20a70a42614be11824d471",
+      "sourceName": "contracts/seaport/contracts/test/ConduitMockRevertBytes.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ConduitInterface.sol",
+        "../lib/TokenTransferrer.sol",
+        "../conduit/lib/ConduitStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ConduitMockRevertBytes"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMockRevertNoReason.sol": {
+      "lastModificationDate": 1660832565846,
+      "contentHash": "0d8306d3583fe04992f9503ec9903948",
+      "sourceName": "contracts/seaport/contracts/test/ConduitMockRevertNoReason.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ConduitInterface.sol",
+        "../lib/TokenTransferrer.sol",
+        "../conduit/lib/ConduitStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ConduitMockRevertNoReason"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMockInvalidMagic.sol": {
+      "lastModificationDate": 1660832565842,
+      "contentHash": "877fc6a77a1dfd03e67ac5c72a1811ea",
+      "sourceName": "contracts/seaport/contracts/test/ConduitMockInvalidMagic.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ConduitInterface.sol",
+        "../lib/TokenTransferrer.sol",
+        "../conduit/lib/ConduitStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ConduitMockInvalidMagic"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitControllerMock.sol": {
+      "lastModificationDate": 1660832565842,
+      "contentHash": "bac59b8d29f12c4b2f3b79bac9f01153",
+      "sourceName": "contracts/seaport/contracts/test/ConduitControllerMock.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ConduitControllerInterface.sol",
+        "../interfaces/ConduitInterface.sol",
+        "../conduit/ConduitController.sol",
+        "../test/ConduitMock.sol",
+        "../test/ConduitMockInvalidMagic.sol",
+        "../test/ConduitMockRevertNoReason.sol",
+        "../test/ConduitMockRevertBytes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ConduitControllerMock"
+      ]
+    },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/conduit/ConduitController.sol": {
       "lastModificationDate": 1660821007400,
       "contentHash": "3a11e80b818a0aef0459ac982e2cd3b4",
@@ -1963,6 +2208,46 @@
       ],
       "artifacts": [
         "ConduitController"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMock.sol": {
+      "lastModificationDate": 1660832565842,
+      "contentHash": "688ccb8acc996615e412c88c3f272e6f",
+      "sourceName": "contracts/seaport/contracts/test/ConduitMock.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/ConduitInterface.sol",
+        "../lib/TokenTransferrer.sol",
+        "../conduit/lib/ConduitStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ConduitMock"
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/conduit/Conduit.sol": {
@@ -2234,6 +2519,44 @@
         "TransferHelperErrors"
       ]
     },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ERC721ReceiverMock.sol": {
+      "lastModificationDate": 1660832565854,
+      "contentHash": "1482042fd2f52f9dfe1afc7970107bd8",
+      "sourceName": "contracts/seaport/contracts/test/ERC721ReceiverMock.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/IERC721Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ERC721ReceiverMock"
+      ]
+    },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/lib/OrderCombiner.sol": {
       "lastModificationDate": 1660821007400,
       "contentHash": "11dbd17027168b059955d5472643d248",
@@ -2392,468 +2715,6 @@
         "Seaport"
       ]
     },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/interfaces/AbridgedTokenInterfaces.sol": {
-      "lastModificationDate": 1660013555239,
-      "contentHash": "e950f0f48e919ed32b9af0ea24e0bc0b",
-      "sourceName": "contracts/seaport/contracts/interfaces/AbridgedTokenInterfaces.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ERC1155Interface",
-        "ERC20Interface",
-        "ERC721Interface"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/interfaces/ImmutableCreate2FactoryInterface.sol": {
-      "lastModificationDate": 1660013555247,
-      "contentHash": "a39410d67294125fa2a5c01c27bc86c0",
-      "sourceName": "contracts/seaport/contracts/interfaces/ImmutableCreate2FactoryInterface.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ImmutableCreate2FactoryInterface"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC20.sol": {
-      "lastModificationDate": 1660821070791,
-      "contentHash": "a0b1801a2ffe030a0f4ff4d508ceb74f",
-      "sourceName": "@rari-capital/solmate/src/tokens/ERC20.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.8.0"
-      ],
-      "artifacts": [
-        "ERC20"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/Ownable.sol": {
-      "lastModificationDate": 1660824075024,
-      "contentHash": "a5798bcd782391f6398252fc6d0585dd",
-      "sourceName": "contracts/helpers/Ownable.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./Context.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Ownable"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/ReentrancyGuard.sol": {
-      "lastModificationDate": 1660824113800,
-      "contentHash": "59a8137caffd6f696b75a7da9a897150",
-      "sourceName": "contracts/helpers/ReentrancyGuard.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ReentrancyGuard"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/helpers/Context.sol": {
-      "lastModificationDate": 1660824067436,
-      "contentHash": "c4b296fb9a98a645ca52cc72c3fbae06",
-      "sourceName": "contracts/helpers/Context.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Context"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMockRevertBytes.sol": {
-      "lastModificationDate": 1660832565846,
-      "contentHash": "0434a74e6d20a70a42614be11824d471",
-      "sourceName": "contracts/seaport/contracts/test/ConduitMockRevertBytes.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/ConduitInterface.sol",
-        "../lib/TokenTransferrer.sol",
-        "../conduit/lib/ConduitStructs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ConduitMockRevertBytes"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMockRevertNoReason.sol": {
-      "lastModificationDate": 1660832565846,
-      "contentHash": "0d8306d3583fe04992f9503ec9903948",
-      "sourceName": "contracts/seaport/contracts/test/ConduitMockRevertNoReason.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/ConduitInterface.sol",
-        "../lib/TokenTransferrer.sol",
-        "../conduit/lib/ConduitStructs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ConduitMockRevertNoReason"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMockInvalidMagic.sol": {
-      "lastModificationDate": 1660832565842,
-      "contentHash": "877fc6a77a1dfd03e67ac5c72a1811ea",
-      "sourceName": "contracts/seaport/contracts/test/ConduitMockInvalidMagic.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/ConduitInterface.sol",
-        "../lib/TokenTransferrer.sol",
-        "../conduit/lib/ConduitStructs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ConduitMockInvalidMagic"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitControllerMock.sol": {
-      "lastModificationDate": 1660832565842,
-      "contentHash": "bac59b8d29f12c4b2f3b79bac9f01153",
-      "sourceName": "contracts/seaport/contracts/test/ConduitControllerMock.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/ConduitControllerInterface.sol",
-        "../interfaces/ConduitInterface.sol",
-        "../conduit/ConduitController.sol",
-        "../test/ConduitMock.sol",
-        "../test/ConduitMockInvalidMagic.sol",
-        "../test/ConduitMockRevertNoReason.sol",
-        "../test/ConduitMockRevertBytes.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ConduitControllerMock"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ConduitMock.sol": {
-      "lastModificationDate": 1660832565842,
-      "contentHash": "688ccb8acc996615e412c88c3f272e6f",
-      "sourceName": "contracts/seaport/contracts/test/ConduitMock.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/ConduitInterface.sol",
-        "../lib/TokenTransferrer.sol",
-        "../conduit/lib/ConduitStructs.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ConduitMock"
-      ]
-    },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/ERC721ReceiverMock.sol": {
-      "lastModificationDate": 1660832565854,
-      "contentHash": "1482042fd2f52f9dfe1afc7970107bd8",
-      "sourceName": "contracts/seaport/contracts/test/ERC721ReceiverMock.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../interfaces/IERC721Receiver.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "ERC721ReceiverMock"
-      ]
-    },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/TestZone.sol": {
       "lastModificationDate": 1660832565866,
       "contentHash": "3d03b58b9911081de7905b0a7579ddfd",
@@ -2891,6 +2752,122 @@
       ],
       "artifacts": [
         "TestZone"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/test/MockCoFunding.sol": {
+      "lastModificationDate": 1661352613477,
+      "contentHash": "75c6254ecd03640229ff18805aec2841",
+      "sourceName": "contracts/test/MockCoFunding.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./MockCoFundingInterface.sol",
+        "../lib/CoFundingStructs.sol",
+        "../lib/CoFundingEnums.sol",
+        "./MockCoFundingInternal.sol",
+        "../seaport/contracts/lib/ConsiderationStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "MockCoFunding"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/interfaces/AbridgedTokenInterfaces.sol": {
+      "lastModificationDate": 1660821007400,
+      "contentHash": "e950f0f48e919ed32b9af0ea24e0bc0b",
+      "sourceName": "contracts/seaport/contracts/interfaces/AbridgedTokenInterfaces.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ERC1155Interface",
+        "ERC20Interface",
+        "ERC721Interface"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/interfaces/ImmutableCreate2FactoryInterface.sol": {
+      "lastModificationDate": 1660821007400,
+      "contentHash": "a39410d67294125fa2a5c01c27bc86c0",
+      "sourceName": "contracts/seaport/contracts/interfaces/ImmutableCreate2FactoryInterface.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "ImmutableCreate2FactoryInterface"
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/EIP1271Wallet.sol": {
@@ -3076,6 +3053,81 @@
         "Reenterer"
       ]
     },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/TestERC1155.sol": {
+      "lastModificationDate": 1660832743744,
+      "contentHash": "d890904f9bc4a4be85796b854364393d",
+      "sourceName": "contracts/seaport/contracts/test/TestERC1155.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@rari-capital/solmate/src/tokens/ERC1155.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "TestERC1155"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC1155.sol": {
+      "lastModificationDate": 1660821070143,
+      "contentHash": "0f01131c8e9d81731a3655fb884c3231",
+      "sourceName": "@rari-capital/solmate/src/tokens/ERC1155.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ERC1155",
+        "ERC1155TokenReceiver"
+      ]
+    },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/TestERC20.sol": {
       "lastModificationDate": 1660832565862,
       "contentHash": "260c997314f8114c59013fd191b4aa8b",
@@ -3112,6 +3164,42 @@
       ],
       "artifacts": [
         "TestERC20"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC20.sol": {
+      "lastModificationDate": 1660821070791,
+      "contentHash": "a0b1801a2ffe030a0f4ff4d508ceb74f",
+      "sourceName": "@rari-capital/solmate/src/tokens/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
       ]
     },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/TestERC20Revert.sol": {
@@ -3190,44 +3278,6 @@
         "TestERC20Panic"
       ]
     },
-    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/TestERC1155.sol": {
-      "lastModificationDate": 1660832743744,
-      "contentHash": "d890904f9bc4a4be85796b854364393d",
-      "sourceName": "contracts/seaport/contracts/test/TestERC1155.sol",
-      "solcConfig": {
-        "version": "0.8.14",
-        "settings": {
-          "viaIR": true,
-          "optimizer": {
-            "enabled": true,
-            "runs": 19066
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@rari-capital/solmate/src/tokens/ERC1155.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.7"
-      ],
-      "artifacts": [
-        "TestERC1155"
-      ]
-    },
     "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/seaport/contracts/test/TestERC721.sol": {
       "lastModificationDate": 1660832743716,
       "contentHash": "5dd205e781fa0019d08876b53e99dd57",
@@ -3264,6 +3314,83 @@
       ],
       "artifacts": [
         "TestERC721"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/node_modules/@rari-capital/solmate/src/tokens/ERC721.sol": {
+      "lastModificationDate": 1660821072943,
+      "contentHash": "224006de5bf59fbbf155dcaac8c3a955",
+      "sourceName": "@rari-capital/solmate/src/tokens/ERC721.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ERC721",
+        "ERC721TokenReceiver"
+      ]
+    },
+    "/home/henry/Work/VMO/CoFunding/smart_contract/contracts/test/MockCoFundingInterface.sol": {
+      "lastModificationDate": 1661352538584,
+      "contentHash": "e657824a47ce462aa969fe8515c13a04",
+      "sourceName": "contracts/test/MockCoFundingInterface.sol",
+      "solcConfig": {
+        "version": "0.8.14",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 19066
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../lib/CoFundingStructs.sol",
+        "../lib/CoFundingEnums.sol",
+        "../seaport/contracts/lib/ConsiderationStructs.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "MockCoFundingInterface"
       ]
     }
   }

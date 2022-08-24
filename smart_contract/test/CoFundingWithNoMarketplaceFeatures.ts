@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { 
-    CoFundingInterface
+    MockCoFunding
 } from "../typechain-types";
 
 import { 
@@ -16,12 +16,13 @@ import {
 import type { CoFundingUtilsFixtures } from "./utils/fixtures";
 import { BigNumber, BigNumberish, ContractTransaction, Wallet } from "ethers";
 import { expect } from "chai";
+
 describe("Test all CoFunding function with no marketplace related features.", async function () {
 
     const { provider } = ethers;
     const owner = new ethers.Wallet(randomHex(32), provider);
 
-    let coFunding: CoFundingInterface;
+    let coFunding: MockCoFunding;
     let createVaultFunctionDataStructure: CoFundingUtilsFixtures["createVaultFunctionDataStructure"];
 
     let getTestItem721: CoFundingUtilsFixtures["getTestItem721"];
@@ -35,6 +36,7 @@ describe("Test all CoFunding function with no marketplace related features.", as
     let convertBigNumberToBytes32: CoFundingUtilsFixtures["convertBigNumberToBytes32"];
     let calculateExpectedSellingPrice: CoFundingUtilsFixtures["calculateExpectedSellingPrice"];
     let balanceCheck: CoFundingUtilsFixtures["balanceCheck"];
+    let calculateRewardAfterFinishVault: CoFundingUtilsFixtures["calculateRewardAfterFinishVault"];
     let errorRevertVaultNotInFundingProcess: CoFundingUtilsFixtures["errorRevertVaultNotInFundingProcess"];
     let errorRevertIsVaultIDExitedAndInFundingProcess: CoFundingUtilsFixtures["errorRevertIsVaultIDExitedAndInFundingProcess"];
     let errorRevertInvalidMoneyTransfer: CoFundingUtilsFixtures["errorRevertInvalidMoneyTransfer"];
@@ -54,6 +56,7 @@ describe("Test all CoFunding function with no marketplace related features.", as
             convertBigNumberToBytes32,
             calculateExpectedSellingPrice,
             balanceCheck,
+            calculateRewardAfterFinishVault,
 
             errorRevertVaultNotInFundingProcess,
             errorRevertIsVaultIDExitedAndInFundingProcess,
@@ -87,7 +90,7 @@ describe("Test all CoFunding function with no marketplace related features.", as
             testERC721.address,
             sampleERC721NFT.nftId,
             now + 1000,
-            now + 2000,
+            now + 1500,
             defaultInitialPrice,
             defaultExpectedPrice
         );
@@ -113,6 +116,10 @@ describe("Test all CoFunding function with no marketplace related features.", as
         };
     };
 
+    const timeTravelVault = async (vaultData: any, time: BigNumber) => {
+        await coFunding.timeTravelVault(vaultData.vaultID, time);
+    }
+
     beforeEach(async () => {
         // Setup basic buyer/seller wallets with ETH
         account1 = new ethers.Wallet(randomHex(32), provider);
@@ -127,7 +134,8 @@ describe("Test all CoFunding function with no marketplace related features.", as
     });
 
     /*
-
+    */
+   
     describe("I. Create vault", async () => {
         // Testing Criteria
         //     I.a. Assert (true) create new vault:
@@ -1816,14 +1824,355 @@ describe("Test all CoFunding function with no marketplace related features.", as
         });
     });
 
-    */
-   
-    // describe("", async () => {
-    //     it("Assert (true)", async () => {
-    //     });
-    //     it("Assert (false)", async () => {
-    //     });
-    // });
+    describe("XIV. End Funding Phase", async () => {
+        // Testing Criteria
+        //     XIV.a. Assert (true) end funding phase
+        //          XVI.a.1. Shift to funded phase
+        //          XVI.a.2. Shift to ended phase
+        //              
+        //          XVI.a.x.
+        //              - Storage variable:  _vaultInfos,_userSpendingWallets
+        //     XIV.b. Assert (false) revert with error OnlyOwner
+        //     XIV.c. Assert (false) revert with error VaultNotExist
+        //     XIV.d. Assert (false) revert with error VaultNotInFundingProcess
+        describe("XIV.a. Assert (true) end funcing phase", async () => {
+            it("XVI.a.1. Shift to funded phase", async () => {
+                
+                let {sampleVaultData} = await createSampleVault();
+                let now = Math.floor(new Date().getTime() / 1000.0);
+                let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+
+                await timeTravelVault(sampleVaultData, BigNumber.from(time));
+                
+                let boughtPrice = sampleVaultData.initialPrice.sub(100);
+
+                await coFunding.connect(owner).endFundingPhase(sampleVaultData.vaultID,boughtPrice);
+
+                //_vaultInfos
+                let expectedVaultParamObj = {
+                    nftCollection: testERC721.address,
+                    nftID: sampleVaultData.nftID,
+                    startFundingTime: sampleVaultData.startFundingTime.sub(time),
+                    endFundingTime: sampleVaultData.endFundingTime.sub(time),
+                    initialPrice: sampleVaultData.initialPrice,
+                    boughtPrice: boughtPrice,
+                    sellingPrice: sampleVaultData.sellingPrice,
+                    defaultExpectedPrice: sampleVaultData.defaultExpectedPrice,
+                    totalAmount: sampleVaultData.totalAmount,
+                    vaultState: 1,
+                }
+
+                expect(await coFunding.connect(account1).getVault(sampleVaultData.vaultID)).to.deep.equal(
+                    convertStructToOutputStruct(expectedVaultParamObj)
+                );
+            });
+            it("XVI.a.2. Shift to ended phase", async () => {
+                let {sampleVaultData} = await createSampleVault();
+                let now = Math.floor(new Date().getTime() / 1000.0);
+                let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+
+                let account1DepositDirectlyToVaultAmount = BigNumber.from(1000);
+                let account2DepositDirectlyToVaultAmount = BigNumber.from(2000);
+
+                await coFunding.connect(account1).depositDirectlyToVault(
+                    sampleVaultData.vaultID,
+                    {value:account1DepositDirectlyToVaultAmount}
+                );
+                await coFunding.connect(account2).depositDirectlyToVault(
+                    sampleVaultData.vaultID,
+                    {value:account2DepositDirectlyToVaultAmount}
+                );
+                
+                let account1SpendingWalletBefore = await coFunding.getUserSpendingWallet(account1.address);
+                let account2SpendingWalletBefore = await coFunding.getUserSpendingWallet(account2.address);
+
+                await timeTravelVault(sampleVaultData, BigNumber.from(time));
+                let boughtPrice = sampleVaultData.initialPrice.add(100);
+
+                await coFunding.connect(owner).endFundingPhase(
+                    sampleVaultData.vaultID,
+                    boughtPrice
+                );
+
+                //_userSpendingWallets
+                expect(await coFunding.connect(account1).getUserSpendingWallet(account1.address)).to.deep.equal(
+                    account1SpendingWalletBefore.add(account1DepositDirectlyToVaultAmount)
+                );
+                expect(await coFunding.connect(account2).getUserSpendingWallet(account2.address)).to.deep.equal(
+                    account2SpendingWalletBefore.add(account2DepositDirectlyToVaultAmount)
+                );
+
+                //_vaultInfos
+                const expectedVaultParamObj = {
+                    nftCollection: testERC721.address,
+                    nftID: sampleVaultData.nftID,
+                    startFundingTime: sampleVaultData.startFundingTime.sub(time),
+                    endFundingTime: sampleVaultData.endFundingTime.sub(time),
+                    initialPrice: sampleVaultData.initialPrice,
+                    boughtPrice: BigNumber.from(0),
+                    sellingPrice: sampleVaultData.sellingPrice,
+                    defaultExpectedPrice: sampleVaultData.defaultExpectedPrice,
+                    totalAmount: account1DepositDirectlyToVaultAmount.add(account2DepositDirectlyToVaultAmount),
+                    vaultState: 2,
+                }
+                
+                expect(await coFunding.connect(account1).getVault(sampleVaultData.vaultID)).to.deep.equal(
+                    convertStructToOutputStruct(expectedVaultParamObj)
+                );
+            });
+        });
+        it("XIV.b. Assert (false) revert with error OnlyOwner", async () => {
+            let {sampleVaultData} = await createSampleVault();
+            let now = Math.floor(new Date().getTime() / 1000.0);
+            let time = sampleVaultData.endFundingTime.toNumber() - now;
+
+            await timeTravelVault(sampleVaultData, BigNumber.from(time));
+            let boughtPrice = sampleVaultData.initialPrice.sub(100);
+
+            await expect(
+                coFunding.connect(account1).endFundingPhase(sampleVaultData.vaultID,boughtPrice)
+            ).to.be.revertedWith("Ownable: caller is not the owner");
+        });
+
+        it("XIV.c. Assert (false) revert with error VaultNotExist", async () => {
+            let {sampleVaultData} = await createSampleVault();
+            let now = Math.floor(new Date().getTime() / 1000.0);
+            let time = sampleVaultData.endFundingTime.toNumber() - now;
+
+            await coFunding.timeTravelVault(sampleVaultData.vaultID, time);
+            let boughtPrice = sampleVaultData.initialPrice.sub(100);
+
+            await expect(
+                coFunding.connect(owner).endFundingPhase(
+                    convertBigNumberToBytes32(sampleVaultData.vaultIDBigInt.add(2)),
+                    boughtPrice
+                )
+            ).to.be.revertedWith("VaultNotExist");
+        });
+
+        it("XIV.d. Assert (false) revert with error VaultNotInFundingProcess", async () => {
+            let {sampleVaultData} = await createSampleVault();
+            let now = Math.floor(new Date().getTime() / 1000.0);
+            let time = sampleVaultData.endFundingTime.toNumber() - now;
+            let boughtPrice = sampleVaultData.initialPrice.sub(100);
+
+            let functionData = coFunding.interface.encodeFunctionData(
+                "endFundingPhase",
+                [
+                    sampleVaultData.vaultID,
+                    boughtPrice
+                ]
+            );
+            
+            await errorRevertVaultNotInFundingProcess(owner,sampleVaultData.vaultID,functionData,undefined,time);
+        });
+    });
+
+    describe("XV. Finish Vault", async () => {
+        // Testing Criteria
+        //     XV.a. Assert (true) finish vault
+        //          XV.a.1. User Reward is not decimal
+        //          XV.a.2. User Reward is decimal
+        //              
+        //          XV.a.x.
+        //              - Storage variable:  _vaultInfos
+        //     XV.b. Assert (false) revert with error OnlyOwner
+        //     XV.c. Assert (false) revert with error VaultNotExist
+        //     XV.d. Assert (false) revert with error VaultCannotBeFinish
+        describe("XV. Finish Vault", async () => {
+            it("XV.a.1. User Reward is not decimal", async () => {
+                let {sampleVaultData} = await createSampleVault();
+                let now = Math.floor(new Date().getTime() / 1000.0);
+                let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+                
+                let account1DepositDirectlyToVaultAmount = BigNumber.from(1000);
+                let account2DepositDirectlyToVaultAmount = BigNumber.from(1000);
+
+                await coFunding.connect(account1).depositDirectlyToVault(
+                    sampleVaultData.vaultID,
+                    {value:account1DepositDirectlyToVaultAmount}
+                );
+                await coFunding.connect(account2).depositDirectlyToVault(
+                    sampleVaultData.vaultID,
+                    {value:account2DepositDirectlyToVaultAmount}
+                );
+                
+                let account1SpendingWalletBefore = await coFunding.getUserSpendingWallet(account1.address);
+                let account2SpendingWalletBefore = await coFunding.getUserSpendingWallet(account2.address);
+
+                await timeTravelVault(sampleVaultData, BigNumber.from(time));
+                
+                let boughtPrice = sampleVaultData.initialPrice.sub(1000);
+                let sellingPrice = sampleVaultData.initialPrice.add(2000);
+                
+                await coFunding.connect(owner).endFundingPhase(sampleVaultData.vaultID,boughtPrice);
+                await coFunding.connect(owner).finishVault(sampleVaultData.vaultID, sellingPrice);
+
+                let account1SpendingWalletAfter = await coFunding.getUserSpendingWallet(account1.address);
+                let account2SpendingWalletAfter = await coFunding.getUserSpendingWallet(account2.address);
+                
+                let expectedSpendingWalletAfter = [
+                    {
+                        address: account1.address,
+                        amount: account1SpendingWalletAfter.sub(account1SpendingWalletBefore)
+                    },
+                    {
+                        address: account2.address,
+                        amount: account2SpendingWalletAfter.sub(account2SpendingWalletBefore)
+                    }
+                ]
+
+                expect(await calculateRewardAfterFinishVault(sampleVaultData.vaultID,sellingPrice)).to.deep.equal(
+                    expectedSpendingWalletAfter
+                );
+
+                //_vaultInfos
+                let vaultInfo = await coFunding.getVault(sampleVaultData.vaultID);
+                expect(vaultInfo.vaultState).to.equal(2);
+
+            });
+            it("XV.a.2. User Reward is decimal", async () => {
+                let {sampleVaultData} = await createSampleVault();
+                let now = Math.floor(new Date().getTime() / 1000.0);
+                let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+                
+                let account1DepositDirectlyToVaultAmount = BigNumber.from(1988);
+                let account2DepositDirectlyToVaultAmount = BigNumber.from(999);
+
+                await coFunding.connect(account1).depositDirectlyToVault(
+                    sampleVaultData.vaultID,
+                    {value:account1DepositDirectlyToVaultAmount}
+                );
+                await coFunding.connect(account2).depositDirectlyToVault(
+                    sampleVaultData.vaultID,
+                    {value:account2DepositDirectlyToVaultAmount}
+                );
+                
+                let account1SpendingWalletBefore = await coFunding.getUserSpendingWallet(account1.address);
+                let account2SpendingWalletBefore = await coFunding.getUserSpendingWallet(account2.address);
+
+                await timeTravelVault(sampleVaultData, BigNumber.from(time));
+                
+                let boughtPrice = sampleVaultData.initialPrice.sub(1499);
+                let sellingPrice = sampleVaultData.initialPrice.add(3752);
+                
+                await coFunding.connect(owner).endFundingPhase(sampleVaultData.vaultID,boughtPrice);
+                await coFunding.connect(owner).finishVault(sampleVaultData.vaultID, sellingPrice);
+
+                let account1SpendingWalletAfter = await coFunding.getUserSpendingWallet(account1.address);
+                let account2SpendingWalletAfter = await coFunding.getUserSpendingWallet(account2.address);
+                
+                let expectedSpendingWalletAfter = [
+                    {
+                        address: account1.address,
+                        amount: account1SpendingWalletAfter.sub(account1SpendingWalletBefore)
+                    },
+                    {
+                        address: account2.address,
+                        amount: account2SpendingWalletAfter.sub(account2SpendingWalletBefore)
+                    }
+                ]
+
+                expect(await calculateRewardAfterFinishVault(sampleVaultData.vaultID,sellingPrice)).to.deep.equal(
+                    expectedSpendingWalletAfter
+                );
+
+                //_vaultInfos
+                let vaultInfo = await coFunding.getVault(sampleVaultData.vaultID);
+                expect(vaultInfo.vaultState).to.equal(2);
+            });
+        });
+        it("XV.b. Assert (false) revert with error OnlyOwner", async () => {
+            let {sampleVaultData} = await createSampleVault();
+            let now = Math.floor(new Date().getTime() / 1000.0);
+            let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+            
+            let account1DepositDirectlyToVaultAmount = BigNumber.from(1000);
+            let account2DepositDirectlyToVaultAmount = BigNumber.from(1000);
+
+            await coFunding.connect(account1).depositDirectlyToVault(
+                sampleVaultData.vaultID,
+                {value:account1DepositDirectlyToVaultAmount}
+            );
+            await coFunding.connect(account2).depositDirectlyToVault(
+                sampleVaultData.vaultID,
+                {value:account2DepositDirectlyToVaultAmount}
+            );
+
+            await timeTravelVault(sampleVaultData, BigNumber.from(time));
+            
+            let boughtPrice = sampleVaultData.initialPrice.sub(1000);
+            let sellingPrice = sampleVaultData.initialPrice.add(2000);
+            
+            await coFunding.connect(owner).endFundingPhase(sampleVaultData.vaultID,boughtPrice);
+
+            await expect(
+                coFunding.connect(account1).finishVault(sampleVaultData.vaultID, sellingPrice)
+            ).to.be.revertedWith("Ownable: caller is not the owner");
+        });
+        it("XV.c. Assert (false) revert with error VaultNotExist", async () => {
+            let {sampleVaultData} = await createSampleVault();
+            let now = Math.floor(new Date().getTime() / 1000.0);
+            let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+            
+            let account1DepositDirectlyToVaultAmount = BigNumber.from(1000);
+            let account2DepositDirectlyToVaultAmount = BigNumber.from(1000);
+
+            await coFunding.connect(account1).depositDirectlyToVault(
+                sampleVaultData.vaultID,
+                {value:account1DepositDirectlyToVaultAmount}
+            );
+            await coFunding.connect(account2).depositDirectlyToVault(
+                sampleVaultData.vaultID,
+                {value:account2DepositDirectlyToVaultAmount}
+            );
+
+            await timeTravelVault(sampleVaultData, BigNumber.from(time));
+            
+            let boughtPrice = sampleVaultData.initialPrice.sub(1000);
+            let sellingPrice = sampleVaultData.initialPrice.add(2000);
+            
+            await coFunding.connect(owner).endFundingPhase(sampleVaultData.vaultID,boughtPrice);
+
+            await expect(
+                coFunding.connect(owner).finishVault(
+                    convertBigNumberToBytes32(sampleVaultData.vaultIDBigInt.add(2)),
+                    sellingPrice
+                )
+            ).to.be.revertedWith("VaultNotExist");
+        });
+        it("XV.d. Assert (false) revert with error VaultCannotBeFinish", async () => {
+            let {sampleVaultData} = await createSampleVault();
+            let now = Math.floor(new Date().getTime() / 1000.0);
+            let time = sampleVaultData.endFundingTime.toNumber() - now + 100;
+            
+            let account1DepositDirectlyToVaultAmount = BigNumber.from(1000);
+            let account2DepositDirectlyToVaultAmount = BigNumber.from(1000);
+
+            await coFunding.connect(account1).depositDirectlyToVault(
+                sampleVaultData.vaultID,
+                {value:account1DepositDirectlyToVaultAmount}
+            );
+            await coFunding.connect(account2).depositDirectlyToVault(
+                sampleVaultData.vaultID,
+                {value:account2DepositDirectlyToVaultAmount}
+            );
+
+            await timeTravelVault(sampleVaultData, BigNumber.from(time));
+            
+            let boughtPrice = sampleVaultData.initialPrice.add(5000);
+            let sellingPrice = sampleVaultData.initialPrice.add(2000);
+            
+            await coFunding.connect(owner).endFundingPhase(sampleVaultData.vaultID,boughtPrice);
+
+            await expect(
+                coFunding.connect(owner).finishVault(
+                    sampleVaultData.vaultID,
+                    sellingPrice
+                )
+            ).to.be.revertedWith("VaultCannotBeFinish");
+        });
+    });
 
 });
 

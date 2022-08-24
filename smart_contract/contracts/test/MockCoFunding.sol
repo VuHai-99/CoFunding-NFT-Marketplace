@@ -1,26 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {CoFundingInterface} from "./interfaces/CoFundingInterface.sol";
-import {VaultInfo, UserContribution} from "./lib/CoFundingStructs.sol";
-import {VaultState} from "./lib/CoFundingEnums.sol";
-import {CoFundingInternal} from "./lib/CoFundingInternal.sol";
-import { Order, BasicOrderParameters } from "./seaport/contracts/lib/ConsiderationStructs.sol";
+import {MockCoFundingInterface} from "./MockCoFundingInterface.sol"; 
+import {VaultInfo, UserContribution} from "../lib/CoFundingStructs.sol";
+import {VaultState} from "../lib/CoFundingEnums.sol";
+import {MockCoFundingInternal} from "./MockCoFundingInternal.sol";
+import { Order, BasicOrderParameters } from "../seaport/contracts/lib/ConsiderationStructs.sol";
 
 /**
- * @title CoFunding
+ * @title MockCoFunding
  * @author 0xHenry
  * @custom:version 1.0
- * @notice CoFunding is a protocol for multiple users co-buying an NFT on 
- *         specific NFT-Marketplace ( currently Opensea ).
+ * @notice Mock contract for testing.
  */ 
 
-contract CoFunding is CoFundingInterface, CoFundingInternal {
- 
+contract MockCoFunding is MockCoFundingInterface, MockCoFundingInternal {
+
     /**
      * @param marketplace Define marketplace protocol address.
      */
-    constructor(address marketplace) CoFundingInternal(marketplace){}
+    constructor(address marketplace) MockCoFundingInternal(marketplace){}
 
     /**
      * @notice Create an vault to co-funding buying an specific NFT. Can be 
@@ -49,6 +48,7 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
 
         _createVault(vaultID, nftCollection, nftID, startFundingTime, endFundingTime, initialPrice, defaultExpectedPrice);
     }
+
 
     /**
      * @notice Set expected selling price to the vault. Call by vault participant only.
@@ -223,33 +223,33 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
     }
 
 
-    /**
-     * @notice End of funding phase:
-     *      +) If raise enough money, smart contract will buy
-     *         NFT from market place, NFT being own by an external address.
-     *         Change state of vault to Funded. Refund surplus money to user.
-     *      +) Else refund (locked) money from vault to user spending wallet.
-     *         Change state of vault to Ended.
-     *         
-     *         1.0 ver only support basic order from seaport.
-     * @param vaultID ID of selected vault.
-     * @param boughtPrice Price of NFT when smart contract buy from marketplace.
-     */
-    function endFundingPhase(
-        bytes32 vaultID, 
-        uint boughtPrice,
-        Order[] calldata orders,
-        BasicOrderParameters calldata parameters
-    )
-        external 
-        override
-        onlyOwner() 
-        {
+    // /**
+    //  * @notice End of funding phase:
+    //  *      +) If raise enough money, smart contract will buy
+    //  *         NFT from market place, NFT being own by an external address.
+    //  *         Change state of vault to Funded. Refund surplus money to user.
+    //  *      +) Else refund (locked) money from vault to user spending wallet.
+    //  *         Change state of vault to Ended.
+    //  *         
+    //  *         1.0 ver only support basic order from seaport.
+    //  * @param vaultID ID of selected vault.
+    //  * @param boughtPrice Price of NFT when smart contract buy from marketplace.
+    //  */
+    // function endFundingPhase(
+    //     bytes32 vaultID, 
+    //     uint boughtPrice,
+    //     Order[] calldata orders,
+    //     BasicOrderParameters calldata parameters
+    // )
+    //     external 
+    //     override
+    //     onlyOwner()
+    //     {
 
-        _endFundingPhase(vaultID,boughtPrice);
-        _seaportFulfillBasicOrder(parameters);
-        _seaportValidate(orders);
-    }
+    //     _endFundingPhase(vaultID,boughtPrice);
+    //     _seaportFulfillBasicOrder(parameters);
+    //     _seaportValidate(orders);
+    // }
 
 
     /**
@@ -361,6 +361,57 @@ contract CoFunding is CoFundingInterface, CoFundingInternal {
         returns (uint expectedSellingPrice){
 
         expectedSellingPrice = _getVaultExpectedSellingPrice(vaultID);
+    }
+
+    /**
+     * @notice Mock-function : Time travel to testing for time-based vault
+     *
+     * @param vaultID New vault ID.
+     * @param time Time travel by setting time minus time 
+     * submit voted expected price.
+     */
+    function timeTravelVault(
+        bytes32 vaultID,
+        uint time
+    ) external { 
+        _timeTravelVault(vaultID, time);
+    }
+
+    /**
+     * @notice Mock-function : Only being call by admin in emergency case.
+     *
+     * @param vaultID ID of selected vault.
+     * @param vaultState ID of selected vault.
+     */
+    function changeStateVault(bytes32 vaultID, VaultState vaultState)
+        external
+         
+        {
+
+        _changeStateVault(vaultID,vaultState);
+    }
+    /**
+     * @notice Mock-function: End of funding phase:
+     *      +) If raise enough money, smart contract will buy
+     *         NFT from market place, NFT being own by an external address.
+     *         Change state of vault to Funded. Refund surplus money to user.
+     *      +) Else refund (locked) money from vault to user spending wallet.
+     *         Change state of vault to Ended.
+     *         
+     *         1.0 ver only support basic order from seaport.
+     * @param vaultID ID of selected vault.
+     * @param boughtPrice Price of NFT when smart contract buy from marketplace.
+     */
+    function endFundingPhase(
+        bytes32 vaultID, 
+        uint boughtPrice
+    )
+        external 
+        override 
+        onlyOwner()
+        {
+
+        _endFundingPhase(vaultID,boughtPrice);
     }
 }
  

@@ -22,15 +22,15 @@ import {
     ContractTransaction,
     Wallet,
 } from "ethers";
-import { CoFundingInterface } from "../../../typechain-types";
+import { MockCoFunding } from "../../../typechain-types";
 
 const { provider } = ethers;
 
 export const coFundingFixture =  async (
     owner: Wallet
 ) => {
-    let coFunding: CoFundingInterface;
-    coFunding = await deployContract("CoFunding", owner, owner.address);
+    let coFunding: MockCoFunding;
+    coFunding = await deployContract("MockCoFunding", owner, owner.address);
     let validNewNFTID = 1;
     let validNewVaultID = 1;
     let defaultInitialPrice = 2000;
@@ -87,6 +87,26 @@ export const coFundingFixture =  async (
         return expectedSellingPrice;
     };
 
+    const calculateRewardAfterFinishVault = async (
+        vaultID: string,
+        sellingPrice: BigNumberish
+    ) => {
+        let vaultUser = await coFunding.getListOfUserInVault(vaultID);
+        let vaultInfo = await coFunding.getVault(vaultID);
+        let rewardMoney = (vaultInfo.totalAmount.add(sellingPrice)).sub(vaultInfo.boughtPrice);
+        let res:Array<{address: string; amount: BigNumber}> = [];
+        for (let i:number = 0; i< vaultUser.length; i++){
+            let userContribution = await coFunding.getContributionInVault(vaultID,vaultUser[i]);
+            let userReward = (rewardMoney.mul(userContribution.contributionAmount)).div(vaultInfo.totalAmount);
+            res.push({
+                address: vaultUser[i],
+                amount: userReward
+            });
+        }
+
+        return res;
+    };
+
     const createVaultFunctionDataStructure = (
         vaultID: BigNumberish,
         nftCollection: string,
@@ -136,7 +156,8 @@ export const coFundingFixture =  async (
         account: Wallet,
         vaultID: string,
         functionData: string,
-        value?: BigNumberish
+        value?: BigNumberish,
+        timeTravel?: BigNumberish
     ){
         let tx:any;
         if(value === undefined){
@@ -152,6 +173,13 @@ export const coFundingFixture =  async (
             }
         }
         
+        if((account.address === owner.address) && (timeTravel != null)){
+            await expect(
+                account.sendTransaction(tx)
+            ).to.be.revertedWith("VaultNotInFundingProcess");   
+            await coFunding.connect(owner).timeTravelVault(vaultID, timeTravel);
+        }
+
         await coFunding.connect(owner).changeStateVault(vaultID,1);
         await expect(
             account.sendTransaction(tx)
@@ -166,6 +194,8 @@ export const coFundingFixture =  async (
         await expect(
             account.sendTransaction(tx)
         ).to.be.revertedWith("VaultNotInFundingProcess");
+
+        
     }
 
     async function errorRevertIsVaultIDExitedAndInFundingProcess(
@@ -259,7 +289,8 @@ export const coFundingFixture =  async (
         calculateExpectedSellingPrice,
         errorRevertVaultNotInFundingProcess,
         errorRevertIsVaultIDExitedAndInFundingProcess,
-        errorRevertInvalidMoneyTransfer
+        errorRevertInvalidMoneyTransfer,
+        calculateRewardAfterFinishVault
     };
 };
   

@@ -10,13 +10,10 @@ import { Order, BasicOrderParameters } from "../seaport/contracts/lib/Considerat
  * @title CoFundingInterface
  * @author 0xHenry
  * @custom:version 1.0
- * @notice CoFunding is a protocol for multiple users co-buying an NFT on 
- *         specific NFT-Marketplace ( currently Opensea).
+ * @notice Mocking Interface for test.
  *
- * @dev CoFundingInterface contains all external function interfaces for
- *      CoFunding.
  */
-interface CoFundingInterface {
+interface MockCoFundingInterface {
     /**
      * @notice Create an vault to co-funding buying an specific NFT. Can be call by everybody ( usually user to )
      *
@@ -158,23 +155,23 @@ interface CoFundingInterface {
         external
         payable;
 
-    /**
-     * @notice End of funding phase:
-     *      +) If raise enough money, smart contract will buy
-     *         NFT from market place, NFT being own by an external address.
-     *         Change state of vault to Funded. Refund surplus money to user.
-     *      +) Else refund (locked) money from vault to user spending wallet.
-     *         Change state of vault to Ended.
-     *         
-     * @param vaultID ID of selected vault.
-     * @param boughtPrice Price of NFT when smart contract buy from marketplace.
-     */
-    function endFundingPhase(
-        bytes32 vaultID, 
-        uint boughtPrice,
-        Order[] calldata orders,
-        BasicOrderParameters calldata parameters
-    ) external;
+    // /**
+    //  * @notice End of funding phase:
+    //  *      +) If raise enough money, smart contract will buy
+    //  *         NFT from market place, NFT being own by an external address.
+    //  *         Change state of vault to Funded. Refund surplus money to user.
+    //  *      +) Else refund (locked) money from vault to user spending wallet.
+    //  *         Change state of vault to Ended.
+    //  *         
+    //  * @param vaultID ID of selected vault.
+    //  * @param boughtPrice Price of NFT when smart contract buy from marketplace.
+    //  */
+    // function endFundingPhase(
+    //     bytes32 vaultID, 
+    //     uint boughtPrice,
+    //     Order[] calldata orders,
+    //     BasicOrderParameters calldata parameters
+    // ) external;
 
 
     /**
@@ -259,4 +256,21 @@ interface CoFundingInterface {
         external
         view
         returns (uint expectedSellingPrice);
+
+
+    /**
+     * @notice Mock-function: End of funding phase:
+     *      +) If raise enough money, smart contract will buy
+     *         NFT from market place, NFT being own by an external address.
+     *         Change state of vault to Funded. Refund surplus money to user.
+     *      +) Else refund (locked) money from vault to user spending wallet.
+     *         Change state of vault to Ended.
+     *         
+     * @param vaultID ID of selected vault.
+     * @param boughtPrice Price of NFT when smart contract buy from marketplace.
+     */
+    function endFundingPhase(
+        bytes32 vaultID, 
+        uint boughtPrice
+    ) external;
 }

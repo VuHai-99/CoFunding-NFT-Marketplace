@@ -11,7 +11,7 @@ import { Order, BasicOrderParameters } from "../seaport/contracts/lib/Considerat
 import {Ownable} from "../helpers/Ownable.sol";
 import {ReentrancyGuard} from "../helpers/ReentrancyGuard.sol";
 
-contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, ReentrancyGuard  {
+contract MockCoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, ReentrancyGuard  {
     //Track status of each Vault Info
     mapping(bytes32 => VaultInfo) private _vaultInfos;
     //Track status of each User infomation in each Vault
@@ -362,7 +362,7 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
         }
     }
 
-    /**
+/**
      * @dev Internal function to finish vault is being 
      *         call by admin when selling NFT being bought by someone on the market.
      *         Reward being divided to user due to % of contribution to the pool. 
@@ -412,23 +412,6 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
             uint userReward = (rewardMoney * _userContributions[vaultID][vaultUser[i]].contributionAmount) / _vaultInfos[vaultID].totalAmount;
             _userSpendingWallets[vaultUser[i]] += userReward;
         }
-    }
-
-    /**
-     * @dev Internal function only being call by admin in emergency case.
-     *
-     * @param vaultID ID of selected vault.
-     * @param vaultState ID of selected vault.
-     */
-    function _changeStateVault(bytes32 vaultID, VaultState vaultState)
-        internal  {
-        //Check if vaultID existed
-        VaultInfo storage vaultInfo = _vaultInfos[vaultID];
-        if(vaultInfo.nftCollection == address(0)){
-            revert VaultNotExist();
-        }
-        //Update storage value
-        vaultInfo.vaultState = vaultState;
     }
 
     /**
@@ -601,5 +584,40 @@ contract CoFundingInternal is Ownable, CoFundingErrorsAndEvents, ArrayHelpers, R
             revert VaultEndedOrDisabled();
         }
         _;
+    }
+
+    //Mock-function
+
+    /**
+     * @notice Mock-funtion: Time travel to testing for time-based vault
+     *
+     * @param vaultID New vault ID.
+     * @param time Time travel by setting time minus time 
+     * submit voted expected price.
+     */
+    function _timeTravelVault(
+        bytes32 vaultID,
+        uint time
+    ) internal {
+        VaultInfo storage vaultInfo = _vaultInfos[vaultID];
+        vaultInfo.startFundingTime -= time;
+        vaultInfo.endFundingTime -= time;
+    }
+
+    /**
+     * @dev Internal function only being call by admin in emergency case.
+     *
+     * @param vaultID ID of selected vault.
+     * @param vaultState ID of selected vault.
+     */
+    function _changeStateVault(bytes32 vaultID, VaultState vaultState)
+        internal  {
+        //Check if vaultID existed
+        VaultInfo storage vaultInfo = _vaultInfos[vaultID];
+        if(vaultInfo.nftCollection == address(0)){
+            revert VaultNotExist();
+        }
+        //Update storage value
+        vaultInfo.vaultState = vaultState;
     }
 }

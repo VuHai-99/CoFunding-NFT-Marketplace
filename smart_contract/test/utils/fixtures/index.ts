@@ -32,7 +32,9 @@ export const coFundingUtilsFixture = async (owner: Wallet) => {
 
         errorRevertVaultNotInFundingProcess,
         errorRevertIsVaultIDExitedAndInFundingProcess,
-        errorRevertInvalidMoneyTransfer
+        errorRevertInvalidMoneyTransfer,
+        calculateRewardAfterFinishVault
+
     } = await coFundingFixture(
         owner
     );
@@ -137,7 +139,8 @@ export const coFundingUtilsFixture = async (owner: Wallet) => {
 
         errorRevertVaultNotInFundingProcess,
         errorRevertIsVaultIDExitedAndInFundingProcess,
-        errorRevertInvalidMoneyTransfer
+        errorRevertInvalidMoneyTransfer,
+        calculateRewardAfterFinishVault
     }
 
 };
